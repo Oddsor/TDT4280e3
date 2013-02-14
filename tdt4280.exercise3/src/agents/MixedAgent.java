@@ -1,9 +1,12 @@
 package agents;
 
 @SuppressWarnings("serial")
-public class DefectingAgent extends GeneralAgent {
+public class MixedAgent extends GeneralAgent {
 
-	public DefectingAgent() {
+	/**
+	 * 
+	 */
+	public MixedAgent() {
 		// TODO Auto-generated constructor stub
 	}
 

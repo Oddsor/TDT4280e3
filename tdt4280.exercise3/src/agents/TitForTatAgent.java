@@ -1,9 +1,9 @@
 package agents;
 
 @SuppressWarnings("serial")
-public class DefectingAgent extends GeneralAgent {
+public class TitForTatAgent extends GeneralAgent {
 
-	public DefectingAgent() {
+	public TitForTatAgent() {
 		// TODO Auto-generated constructor stub
 	}
 
