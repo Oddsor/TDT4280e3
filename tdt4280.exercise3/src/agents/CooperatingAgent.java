@@ -1,15 +1,14 @@
 package agents;
 
+import jade.lang.acl.ACLMessage;
+
 @SuppressWarnings("serial")
 public class CooperatingAgent extends GeneralAgent {
 
-	public CooperatingAgent() {
-		// TODO Auto-generated constructor stub
+	@Override
+	void handleMessage(ACLMessage msg) {
+		// TODO Auto-generated method stub
+		
 	}
 
-
-
-public static void main(String[] args){
-    System.out.println("Hello world");
-}
 }
