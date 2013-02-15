@@ -28,7 +28,7 @@ public class TournamentAgent extends Agent {
 
     @Override
     public void setup() {
-        contestants = new ArrayList<>();
+        contestants = new ArrayList<AMSAgentDescription>();
         SearchConstraints sc = new SearchConstraints(); 
         sc.setMaxResults(100L); // not sure of the default value, but this ensures you get them all. 
         AMSAgentDescription[] evalAgents = null;
