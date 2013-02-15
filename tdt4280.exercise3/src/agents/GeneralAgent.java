@@ -13,16 +13,19 @@ public abstract class GeneralAgent extends Agent {
         
 	@Override
 	public void setup(){
-		
-		addBehaviour(new CyclicBehaviour() {
+		final Agent agent = this;
+		addBehaviour(new CyclicBehaviour(agent) {
 			
 			@Override
 			public void action() {
 //			System.out.println("Checking for new messages");
-			ACLMessage msg = receive();
+                        GeneralAgent ag = (GeneralAgent) agent;
+			ACLMessage msg = null;
+                        msg = receive();
 				if (msg != null){
 					try {
-												
+                                            System.out.println("Message get!");
+						ag.handleMessage(msg);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

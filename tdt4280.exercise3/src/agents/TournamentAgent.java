@@ -42,6 +42,7 @@ public class TournamentAgent extends GeneralAgent {
         for(AMSAgentDescription a: contestants){
             System.out.println(a.getName());
         }
+        super.setup();
     }
     public void startTournament(int rounds){
         System.out.println("Got ordered to start tournament with " + rounds + " rounds!");
@@ -51,6 +52,7 @@ public class TournamentAgent extends GeneralAgent {
         currentRound = 0;
         
         //Send one message only in case we get some issues.
+        System.out.println("Sending first message");
         sendMessage(contestants.get(currentFighter).getName(), DILEMMA);
     }
     
