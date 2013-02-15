@@ -1,10 +1,16 @@
 package agents;
 
+import jade.lang.acl.ACLMessage;
+
 @SuppressWarnings("serial")
 public class TitForEveryOtherTatAgent extends GeneralAgent{
 
-	public TitForEveryOtherTatAgent() {
-		// TODO Auto-generated constructor stub
+	
+
+	@Override
+	void handleMessage(ACLMessage msg) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
