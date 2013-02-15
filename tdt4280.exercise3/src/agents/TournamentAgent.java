@@ -14,10 +14,6 @@ import java.util.logging.Logger;
 
 @SuppressWarnings("serial")
 public class TournamentAgent extends GeneralAgent {
-    private static final String DILEMMA = "DILEMMA";
-    private static final int DEFECT = 0;
-    private static final int COOP = 1;
-    
     private List<AMSAgentDescription> contestants;
     private int currentFighter = -1;
     private int currentOpponent = -1;

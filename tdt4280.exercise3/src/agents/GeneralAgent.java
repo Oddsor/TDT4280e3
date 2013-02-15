@@ -7,7 +7,10 @@ import jade.lang.acl.ACLMessage;
 
 @SuppressWarnings("serial")
 public abstract class GeneralAgent extends Agent {
-
+        static final String DILEMMA = "DILEMMA";
+        static final int DEFECT = 0;
+        static final int COOP = 1;
+        
 	@Override
 	public void setup(){
 		
