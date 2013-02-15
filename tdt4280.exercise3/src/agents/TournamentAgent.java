@@ -13,7 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @SuppressWarnings("serial")
-public class TournamentAgent extends Agent {
+public class TournamentAgent extends GeneralAgent {
     private static final String DILEMMA = "DILEMMA";
     private static final int DEFECT = 0;
     private static final int COOP = 1;
@@ -48,26 +48,6 @@ public class TournamentAgent extends Agent {
         for(AMSAgentDescription a: contestants){
             System.out.println(a.getName());
         }
-        final Agent agent = this;
-        addBehaviour(new CyclicBehaviour(agent) {
-            @Override
-            public void action() {
-                TournamentAgent ta = (TournamentAgent) agent;
-                ACLMessage msg = receive();
-                if (msg != null){
-                    try{
-                        if(msg.getPerformative() == ACLMessage.REQUEST){
-                            ta.startTournament(Integer.parseInt(msg.getContent()));
-                        }
-                        if(msg.getPerformative() == ACLMessage.CFP){
-                            ta.handleReturn(msg);
-                        }
-                    }catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
     }
     public void startTournament(int rounds){
         System.out.println("Got ordered to start tournament with " + rounds + " rounds!");
@@ -89,5 +69,15 @@ public class TournamentAgent extends Agent {
     
     public void handleReturn(ACLMessage msg){
         
+    }
+
+    @Override
+    void handleMessage(ACLMessage msg) {
+        if(msg.getPerformative() == ACLMessage.REQUEST){
+            startTournament(Integer.parseInt(msg.getContent()));
+        }
+        if(msg.getPerformative() == ACLMessage.CFP){
+            handleReturn(msg);
+        }
     }
 }
