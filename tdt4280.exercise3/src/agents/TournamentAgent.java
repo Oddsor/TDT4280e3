@@ -1,10 +1,12 @@
 package agents;
 
 import jade.core.Agent;
+import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.AMSService;
 import jade.domain.FIPAAgentManagement.AMSAgentDescription;
 import jade.domain.FIPAAgentManagement.SearchConstraints;
 import jade.domain.FIPAException;
+import jade.lang.acl.ACLMessage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,8 +40,31 @@ public class TournamentAgent extends Agent {
         for(AMSAgentDescription a: contestants){
             System.out.println(a.getName());
         }
+        final Agent agent = this;
+        addBehaviour(new CyclicBehaviour(agent) {
+            @Override
+            public void action() {
+                TournamentAgent ta = (TournamentAgent) agent;
+                ACLMessage msg = receive();
+                if (msg != null){
+                    try{
+                        if(msg.getPerformative() == ACLMessage.REQUEST){
+                            ta.startTournament(Integer.parseInt(msg.getContent()));
+                        }
+                        if(msg.getPerformative() == ACLMessage.CFP){
+                            ta.handleReturn(msg);
+                        }
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
-	
-	
-
+    public void startTournament(int rounds){
+        System.out.println("Got ordered to start tournament with " + rounds + " rounds!");
+    }
+    public void handleReturn(ACLMessage msg){
+        
+    }
 }
