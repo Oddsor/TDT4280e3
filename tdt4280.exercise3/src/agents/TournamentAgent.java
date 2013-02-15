@@ -7,7 +7,6 @@ import jade.domain.FIPAAgentManagement.AMSAgentDescription;
 import jade.domain.FIPAAgentManagement.SearchConstraints;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -15,8 +14,17 @@ import java.util.logging.Logger;
 
 @SuppressWarnings("serial")
 public class TournamentAgent extends Agent {
-
+    private static final String DILEMMA = "DILEMMA";
+    private static final int DEFECT = 0;
+    private static final int COOP = 1;
+    
     private List<AMSAgentDescription> contestants;
+    private int currentFighter = -1;
+    private int currentOpponent = -1;
+    private int currentRound = -1;
+    private int rounds = -1;
+    private int fighterResponse = -1;
+    private int opponentResponse = -1;
 
     @Override
     public void setup() {
@@ -63,7 +71,22 @@ public class TournamentAgent extends Agent {
     }
     public void startTournament(int rounds){
         System.out.println("Got ordered to start tournament with " + rounds + " rounds!");
+        currentFighter = 0;
+        currentOpponent = 1;
+        this.rounds = rounds;
+        currentRound = 0;
+        
+        sendMessage(contestants.get(currentFighter).getName(), DILEMMA);
+        sendMessage(contestants.get(currentOpponent).getName(), DILEMMA);
     }
+    
+    public void sendMessage(jade.core.AID receiver, String content){
+        ACLMessage msg = new ACLMessage(ACLMessage.CFP);
+        msg.addReceiver(contestants.get(currentFighter).getName());
+        msg.setContent(content);
+        send(msg);
+    }
+    
     public void handleReturn(ACLMessage msg){
         
     }
