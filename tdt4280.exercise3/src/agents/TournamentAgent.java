@@ -76,6 +76,14 @@ public class TournamentAgent extends GeneralAgent {
         if (fighterResponse != null && opponentResponse != null){
             sendMessage(contestants.get(currentFighter).getName(), opponentResponse);
             sendMessage(contestants.get(currentOpponent).getName(), fighterResponse);
+            if(fighterResponse.equals(DEFECT) && opponentResponse.equals(DEFECT)) System.out.println("Both defect.");
+            else if(fighterResponse.equals(DEFECT) && opponentResponse.equals(COOPERATE)){
+                System.out.println(contestants.get(currentFighter).getName().getLocalName() + " wins.");
+            }else if(fighterResponse.equals(COOPERATE) && opponentResponse.equals(DEFECT)){
+                System.out.println(contestants.get(currentOpponent).getName().getLocalName() + " wins.");
+            }else{
+                System.out.println("Both cooperate!");
+            }
             fighterResponse = null; //Clearing responses.
             opponentResponse = null;
             currentRound++;
@@ -89,7 +97,12 @@ public class TournamentAgent extends GeneralAgent {
             currentRound = 0;
             if(currentOpponent < contestants.size() - 1){
                 currentOpponent++;
+                System.out.println("Fight over, starting new fight with " + contestants.get(currentFighter).getName().getLocalName() 
+                        + " and " + contestants.get(currentOpponent).getName().getLocalName());
                 sendMessage(contestants.get(currentFighter).getName(), DILEMMA);
+            }else{
+                System.out.println(contestants.get(currentFighter).getName().getLocalName() + " done with fighting.");
+                contestants.remove(currentFighter);
             }
             //If index of current fighter is second last in table, wrap up tournament, otherwise continue:
             if(currentFighter - 2 != contestants.size()){
