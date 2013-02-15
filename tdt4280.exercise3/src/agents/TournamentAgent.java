@@ -61,6 +61,18 @@ public class TournamentAgent extends GeneralAgent {
         send(msg);
     }
     
+    /**
+     * Handles the returned message:
+     * If the message is from fighter, add his response and contact opponent.<br/>
+     * If the message is from opponent, then add his response, send the results
+     * back to the agents and go to next round by sending request to fighter. <br/>
+     * If the current round is the last round, start fight with new opponent,
+     * unless we're out of opponents. In this case remove the current fighter and
+     * start with new fighter. If the current fighter is the second last, wrap up
+     * the tournament.
+     * @param msg 
+     */
+    //TODO verifiser og fiks kontrollflyten.
     public void handleReturn(ACLMessage msg){
         if(msg.getSender().equals(contestants.get(currentFighter).getName())){
             fighterResponse = msg.getContent();
@@ -76,6 +88,7 @@ public class TournamentAgent extends GeneralAgent {
         if (fighterResponse != null && opponentResponse != null){
             sendMessage(contestants.get(currentFighter).getName(), opponentResponse);
             sendMessage(contestants.get(currentOpponent).getName(), fighterResponse);
+            //Analyze results:
             if(fighterResponse.equals(DEFECT) && opponentResponse.equals(DEFECT)) System.out.println("Both defect.");
             else if(fighterResponse.equals(DEFECT) && opponentResponse.equals(COOPERATE)){
                 System.out.println(contestants.get(currentFighter).getName().getLocalName() + " wins.");
