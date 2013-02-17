@@ -58,7 +58,7 @@ public class TournamentAgent extends GeneralAgent {
     
     public void sendMessage(jade.core.AID receiver, String content){
         ACLMessage msg = new ACLMessage(ACLMessage.CFP);
-        msg.addReceiver(contestants.get(currentFighter).getName());
+        msg.addReceiver(receiver);
         msg.setContent(content);
         send(msg);
     }
@@ -129,7 +129,8 @@ public class TournamentAgent extends GeneralAgent {
     }
 
     @Override
-    void handleMessage(ACLMessage msg) {
+    void handleMessage(ACLMessage msg){
+        System.out.println("Handling message...");
         if(msg.getPerformative() == ACLMessage.REQUEST){
             startTournament(Integer.parseInt(msg.getContent()));
         }
