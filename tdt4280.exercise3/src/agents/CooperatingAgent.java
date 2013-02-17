@@ -14,10 +14,7 @@ public class CooperatingAgent extends GeneralAgent {
 	@Override
 	void handleMessage(ACLMessage msg) {
 		if(msg.getContent().equals(DILEMMA)){
-			ACLMessage reply = new ACLMessage(ACLMessage.CFP);
-			reply.setContent(COOPERATE);
-			reply.addReceiver(msg.getSender());
-                        send(msg);
+			sendMessage(msg.getSender(), COOPERATE);
 		}
 	}
 

@@ -43,6 +43,7 @@ public class TournamentAgent extends GeneralAgent {
             System.out.println(a.getName());
         }
         super.setup();
+        startTournament(5);
     }
     public void startTournament(int rounds){
         System.out.println("Got ordered to start tournament with " + rounds + " rounds!");
@@ -52,15 +53,10 @@ public class TournamentAgent extends GeneralAgent {
         currentRound = 0;
         
         //Send one message only in case we get some issues.
-        System.out.println("Sending first message");
+        System.out.println("Starting tournament with " + 
+                contestants.get(currentFighter).getName().getLocalName() + " and " + 
+                contestants.get(currentOpponent).getName().getLocalName());
         sendMessage(contestants.get(currentFighter).getName(), DILEMMA);
-    }
-    
-    public void sendMessage(jade.core.AID receiver, String content){
-        ACLMessage msg = new ACLMessage(ACLMessage.CFP);
-        msg.addReceiver(receiver);
-        msg.setContent(content);
-        send(msg);
     }
     
     /**
@@ -116,21 +112,24 @@ public class TournamentAgent extends GeneralAgent {
                         + " and " + contestants.get(currentOpponent).getName().getLocalName());
                 sendMessage(contestants.get(currentFighter).getName(), DILEMMA);
             }else{
-                System.out.println(contestants.get(currentFighter).getName().getLocalName() + " done with fighting.");
-                contestants.remove(currentFighter);
-            }
-            //If index of current fighter is second last in table, wrap up tournament, otherwise continue:
-            if(currentFighter - 2 != contestants.size()){
-                contestants.remove(currentFighter);
-            }else{
-                System.out.println("Done with tournament");
+                if(contestants.size() == 2){
+                    System.out.println("Tournament has ended...");
+                }else{
+                    System.out.println(contestants.get(currentFighter).getName().getLocalName() + 
+                        " done with fighting. New fighter is " + 
+                        contestants.get(currentFighter + 1).getName().getLocalName() +" and first opponent is " + 
+                        contestants.get(currentFighter + 2).getName().getLocalName());
+                    contestants.remove(currentFighter);
+                    currentOpponent = 1;
+                    sendMessage(contestants.get(currentFighter).getName(), DILEMMA);
+                }
+                
             }
         }
     }
 
     @Override
     void handleMessage(ACLMessage msg){
-        System.out.println("Handling message...");
         if(msg.getPerformative() == ACLMessage.REQUEST){
             startTournament(Integer.parseInt(msg.getContent()));
         }

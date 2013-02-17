@@ -11,26 +11,34 @@ public abstract class GeneralAgent extends Agent {
         static final String DEFECT = "DEFECT";
         static final String COOPERATE = "COOPERATE";
         
+        public void sendMessage(jade.core.AID receiver, String content){
+            ACLMessage msg = new ACLMessage(ACLMessage.CFP);
+            msg.addReceiver(receiver);
+            msg.setContent(content);
+            send(msg);
+        }
+        
 	@Override
 	public void setup(){
-		final Agent agent = this;
-		addBehaviour(new CyclicBehaviour(agent) {
-			
+		addBehaviour(new CyclicBehaviour(this) {
+
+                    public Agent getMyAgent() {
+                        return myAgent;
+                    }
+                    
 			@Override
 			public void action() {
-//			System.out.println("Checking for new messages");
-                        GeneralAgent ag = (GeneralAgent) agent;
-			ACLMessage msg = null;
-                        msg = receive();
-				if (msg != null){
-					try {
-                                            System.out.println("Message get!");
-						ag.handleMessage(msg);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			}
+                            GeneralAgent ag = (GeneralAgent) getMyAgent();
+                            ACLMessage msg = receive();
+                            if (msg != null){
+                                    try {
+                                            ag.handleMessage(msg);
+                                    } catch (Exception e) {
+                                            e.printStackTrace();
+                                    }
+                            }
+                            block();
+                    }
 		});
 	}
 	abstract void handleMessage(ACLMessage msg); 
