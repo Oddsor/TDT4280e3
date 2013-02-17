@@ -20,6 +20,15 @@ public class TournamentAgent extends GeneralAgent {
     private String fighterResponse = null;
     private String opponentResponse = null;
 
+    /**
+     * Handles specific stuff needed for tournament agent, for instance the list
+     * of agents that are in the tournament. The superclass GeneralAgent handles
+     * the behaviour that receives messages.
+     * 
+     * Also starts a tournament, even though tournaments can be started by 
+     * sending a REQUEST-message to tournament agent with the number of rounds as
+     * the message body (content).
+     */
     @Override
     public void setup() {
         contestants = new ArrayList<AMSAgentDescription>();

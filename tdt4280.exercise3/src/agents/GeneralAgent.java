@@ -11,6 +11,12 @@ public abstract class GeneralAgent extends Agent {
         static final String DEFECT = "DEFECT";
         static final String COOPERATE = "COOPERATE";
         
+        /**
+         * Sender beskjed med performativen som er bestemt av oppgaven (CFP)
+         * Velger mottaker og setter innhold til å være en av konstantene.
+         * @param receiver
+         * @param content 
+         */
         public void sendMessage(jade.core.AID receiver, String content){
             ACLMessage msg = new ACLMessage(ACLMessage.CFP);
             msg.addReceiver(receiver);
@@ -21,11 +27,9 @@ public abstract class GeneralAgent extends Agent {
 	@Override
 	public void setup(){
 		addBehaviour(new CyclicBehaviour(this) {
-
                     public Agent getMyAgent() {
                         return myAgent;
                     }
-                    
 			@Override
 			public void action() {
                             GeneralAgent ag = (GeneralAgent) getMyAgent();
@@ -37,7 +41,7 @@ public abstract class GeneralAgent extends Agent {
                                             e.printStackTrace();
                                     }
                             }
-                            block();
+                            block(); //Nyttig for å stoppe cyclicbehaviour fra å loope i evigheter
                     }
 		});
 	}
