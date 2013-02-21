@@ -10,8 +10,6 @@ import jade.lang.acl.ACLMessage;
 @SuppressWarnings("serial")
 public class RandomAgent extends GeneralAgent {
 
-	private final String DEFECT = "DEFECT";
-	private final String COOPERATE = "COOPERATE";
 
 	@Override
 	void handleMessage(ACLMessage msg){

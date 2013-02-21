@@ -16,11 +16,8 @@ import jade.lang.acl.ACLMessage;
 public class MixedAgent extends GeneralAgent {
 	
 	private boolean otherPlayerDefected = false; //Positive tit-for-tat.
-	ArrayList<String> history = new ArrayList<String>();
-	private final String DEFECT = "DEFECT";
-	private final String COOPERATE = "COOPERATE";
-	private final String DILEMMA = "DILEMMA";
-
+	
+	
 	@Override
 	void handleMessage(ACLMessage msg) {
 

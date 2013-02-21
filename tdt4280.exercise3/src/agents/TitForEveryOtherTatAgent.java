@@ -12,9 +12,6 @@ public class TitForEveryOtherTatAgent extends GeneralAgent{
 
 	private boolean otherPlayerDefected = false; //Positive tit-for-tat.
 	private boolean semaphore = false;
-	private final String DEFECT = "DEFECT";
-	private final String COOPERATE = "COOPERATE";
-	private final String DILEMMA = "DILEMMA";
 
 	@Override
 	void handleMessage(ACLMessage msg) {

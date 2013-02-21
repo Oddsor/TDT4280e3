@@ -12,9 +12,7 @@ import jade.lang.acl.ACLMessage;
 public class TitForTatAgent extends GeneralAgent {
 
 	private boolean otherPlayerDefected = false; //Positive tit-for-tat.
-	private final String DEFECT = "DEFECT";
-	private final String COOPERATE = "COOPERATE";
-	private final String DILEMMA = "DILEMMA";
+
 
 	@Override
 	void handleMessage(ACLMessage msg) {
