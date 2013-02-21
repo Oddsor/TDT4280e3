@@ -30,7 +30,7 @@ public class TitForEveryOtherTatAgent extends GeneralAgent{
 		if(message.equals(DILEMMA)){
 
 			sendMessage(msg.getSender(), (otherPlayerDefected && semaphore) ? DEFECT : COOPERATE);
-			System.out.println((otherPlayerDefected && semaphore) ? DEFECT : COOPERATE);
+			
 		}
 	}
 

@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import other.TournamentLogger;
+
 @SuppressWarnings("serial")
 public class TournamentAgent extends GeneralAgent {
     private List<AMSAgentDescription> contestants;
@@ -19,6 +21,7 @@ public class TournamentAgent extends GeneralAgent {
     private int rounds = -1;
     private String fighterResponse = null;
     private String opponentResponse = null;
+    private TournamentLogger tl = TournamentLogger.getTournamentLogger();
 
     /**
      * Handles specific stuff needed for tournament agent, for instance the list
@@ -52,7 +55,7 @@ public class TournamentAgent extends GeneralAgent {
             System.out.println(a.getName());
         }
         super.setup();
-        startTournament(5);
+        startTournament(10);
     }
     public void startTournament(int rounds){
         System.out.println("Got ordered to start tournament with " + rounds + " rounds!");
@@ -62,10 +65,16 @@ public class TournamentAgent extends GeneralAgent {
         currentRound = 0;
         
         //Send one message only in case we get some issues.
-        System.out.println("Starting tournament with " + 
+        String temp = "Starting tournament with " + 
                 contestants.get(currentFighter).getName().getLocalName() + " and " + 
-                contestants.get(currentOpponent).getName().getLocalName());
+                contestants.get(currentOpponent).getName().getLocalName();
+                
+        System.out.println(temp);
         sendMessage(contestants.get(currentFighter).getName(), DILEMMA);
+        
+       
+        tl.log("New tournament started with "+rounds+" rounds");
+        tl.log(temp);
     }
     
     /**
@@ -80,8 +89,11 @@ public class TournamentAgent extends GeneralAgent {
      * @param msg 
      */
     //TODO verifiser og fiks kontrollflyten.
+    
     public void handleReturn(ACLMessage msg){
-        if(msg.getSender().equals(contestants.get(currentFighter).getName())){
+   
+    	
+    	if(msg.getSender().equals(contestants.get(currentFighter).getName())){
             fighterResponse = msg.getContent();
             //We got an answer from fighter, if we still haven't contacted the opponent, do so now.
             if(opponentResponse == null){
@@ -91,26 +103,49 @@ public class TournamentAgent extends GeneralAgent {
         }else if(msg.getSender().equals(contestants.get(currentOpponent).getName())){
             opponentResponse = msg.getContent();
         }
+        
+        
         //Both have answered, send results. Won't get replies here so can send both without worry?
         if (fighterResponse != null && opponentResponse != null){
-            sendMessage(contestants.get(currentFighter).getName(), opponentResponse);
+        	
+        	//TODO: Vurdere om vi skal bruke en annen message type her for å gjøre message handling 
+        	// litt fjongere i agentene. Ikke nødvendig, men kan gjøres.
+        	sendMessage(contestants.get(currentFighter).getName(), opponentResponse);
             sendMessage(contestants.get(currentOpponent).getName(), fighterResponse);
+           
             //Analyze results:
-            if(fighterResponse.equals(DEFECT) && opponentResponse.equals(DEFECT)) System.out.println("Both defect.");
-            else if(fighterResponse.equals(DEFECT) && opponentResponse.equals(COOPERATE)){
-                System.out.println(contestants.get(currentFighter).getName().getLocalName() + " wins.");
-            }else if(fighterResponse.equals(COOPERATE) && opponentResponse.equals(DEFECT)){
-                System.out.println(contestants.get(currentOpponent).getName().getLocalName() + " wins.");
-            }else{
-                System.out.println("Both cooperate!");
+            if(fighterResponse.equals(DEFECT) && opponentResponse.equals(DEFECT)){
+            	String temp = "Both Defected in round "+currentRound;
+            	tl.log(temp);
+                System.out.println(temp);
             }
+            else if(fighterResponse.equals(DEFECT) && opponentResponse.equals(COOPERATE)){
+            	String temp = contestants.get(currentFighter).getName().getLocalName() + " wins round "+currentRound;
+            	tl.log(temp);
+            	System.out.println(temp);
+            }else if(fighterResponse.equals(COOPERATE) && opponentResponse.equals(DEFECT)){
+            	String temp = contestants.get(currentOpponent).getName().getLocalName() + " wins round "+currentRound;
+            	tl.log(temp);
+                System.out.println(temp);
+            }else{
+            	String temp = "Both cooperated in round "+currentRound;
+            	tl.log(temp);
+                System.out.println(temp);
+            }
+            
             fighterResponse = null; //Clearing responses.
             opponentResponse = null;
             currentRound++;
         }
+        
+        
         if(currentRound < rounds){
+        	
+        	System.out.println("Entered currentRound-if");
+        	tl.printLog();
             //One round complete, request new input from fighter:
             sendMessage(contestants.get(currentFighter).getName(), DILEMMA);
+            
         }else{
             /*Done with fight, now we reset and start with a new opponent (or a 
              * new fighter if opponent is last in table. Toss current fighter out of contestant table)*/
@@ -139,7 +174,8 @@ public class TournamentAgent extends GeneralAgent {
 
     @Override
     void handleMessage(ACLMessage msg){
-        if(msg.getPerformative() == ACLMessage.REQUEST){
+    	
+    	if(msg.getPerformative() == ACLMessage.REQUEST){
             startTournament(Integer.parseInt(msg.getContent()));
         }
         if(msg.getPerformative() == ACLMessage.CFP){
