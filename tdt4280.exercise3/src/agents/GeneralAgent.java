@@ -3,7 +3,11 @@ package agents;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
-
+/**
+ * 
+ * General agent class that supports sending and
+ * receiving messages.
+ */
 
 @SuppressWarnings("serial")
 public abstract class GeneralAgent extends Agent {
@@ -13,7 +17,7 @@ public abstract class GeneralAgent extends Agent {
         
         /**
          * Sender beskjed med performativen som er bestemt av oppgaven (CFP)
-         * Velger mottaker og setter innhold til å være en av konstantene.
+         * Velger mottaker og setter innhold til aa vaere en av konstantene.
          * @param receiver
          * @param content 
          */

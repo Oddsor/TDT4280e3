@@ -2,20 +2,19 @@ package agents;
 
 
 import jade.lang.acl.ACLMessage;
-
+/**
+ * 
+ * Agent that always defects
+ *
+ */
 @SuppressWarnings("serial")
 public class DefectingAgent extends GeneralAgent {
-
-    @Override
-    public void setup() {
-        super.setup(); //To change body of generated methods, choose Tools | Templates.
-    }
-    
-
-        @Override
+   
+	@Override
 	void handleMessage(ACLMessage msg){
-		if(msg.getContent().equals(DILEMMA)){
-                        sendMessage(msg.getSender(), DEFECT);
+	
+		if(msg.getContent().equals(DILEMMA))
+			
+			sendMessage(msg.getSender(), DEFECT);
 		}
-	}
 }
