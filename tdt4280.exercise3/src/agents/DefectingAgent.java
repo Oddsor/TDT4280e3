@@ -15,6 +15,6 @@ public class DefectingAgent extends GeneralAgent {
                 System.out.println(this.getLocalName() + " got message " + msg.getContent() + ", answers.");
 		if(msg.getContent().equals(DILEMMA))
 			
-			sendMessage(msg.getSender(), DEFECT);
+			sendMessage(msg.getSender(), DEFECT, ACLMessage.PROPOSE);
 		}
 }

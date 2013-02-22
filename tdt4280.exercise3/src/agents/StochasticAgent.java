@@ -25,7 +25,7 @@ public class StochasticAgent extends GeneralAgent {
 
 		if(message.equals(DILEMMA)){
 			total++;
-			sendMessage(msg.getSender(), lottery());
+			sendMessage(msg.getSender(), lottery(), ACLMessage.PROPOSE);
 		}
 	}
 

@@ -27,9 +27,9 @@ public class MixedAgent extends GeneralAgent {
 
 		if(message.equals(DILEMMA)){
 			if(Math.random() > 0.5)
-				sendMessage(msg.getSender(), otherPlayerDefected ? DEFECT : COOPERATE);
+				sendMessage(msg.getSender(), otherPlayerDefected ? DEFECT : COOPERATE, ACLMessage.PROPOSE);
 
-			else sendMessage(msg.getSender(), DEFECT);
+			else sendMessage(msg.getSender(), DEFECT, ACLMessage.PROPOSE);
 		}
 	}
 }

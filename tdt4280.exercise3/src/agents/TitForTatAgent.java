@@ -22,7 +22,7 @@ public class TitForTatAgent extends GeneralAgent {
 		else if(message.equals(COOPERATE)) otherPlayerDefected = false;
 
 		if(message.equals(DILEMMA)){
-			sendMessage(msg.getSender(), otherPlayerDefected ? DEFECT : COOPERATE);
+			sendMessage(msg.getSender(), otherPlayerDefected ? DEFECT : COOPERATE, ACLMessage.PROPOSE);
 		}
 	}
 

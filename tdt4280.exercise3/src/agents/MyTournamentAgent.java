@@ -252,7 +252,7 @@ private void handleNextRound(){
     	if(msg.getPerformative() == ACLMessage.REQUEST){
             startTournament(Integer.parseInt(msg.getContent()));
         }
-        if(msg.getPerformative() == ACLMessage.CFP){
+        if(msg.getPerformative() == ACLMessage.PROPOSE){
             handleReturn(msg);
         }
         if(msg.getPerformative()== ACLMessage.AGREE){

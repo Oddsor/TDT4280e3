@@ -15,7 +15,7 @@ public class RandomAgent extends GeneralAgent {
 	void handleMessage(ACLMessage msg){
             System.out.println(this.getLocalName() + " got message " + msg.getContent() + ", answers.");
 		if(msg.getContent().equals(DILEMMA))
-			sendMessage(msg.getSender(), Math.random() < 0.5 ? DEFECT : COOPERATE);
+			sendMessage(msg.getSender(), Math.random() < 0.5 ? DEFECT : COOPERATE, ACLMessage.PROPOSE);
 
 	}
 }
