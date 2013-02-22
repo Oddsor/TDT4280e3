@@ -20,7 +20,7 @@ public class MixedAgent extends GeneralAgent {
 	
 	@Override
 	void handleMessage(ACLMessage msg) {
-
+                System.out.println(this.getLocalName() + " got message " + msg.getContent() + ", answers.");
 		String message = msg.getContent();
 		if(message.equals(DEFECT)) otherPlayerDefected = true;
 		else if(message.equals(COOPERATE)) otherPlayerDefected = false;

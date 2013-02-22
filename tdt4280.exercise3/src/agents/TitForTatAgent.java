@@ -17,6 +17,7 @@ public class TitForTatAgent extends GeneralAgent {
 	@Override
 	void handleMessage(ACLMessage msg) {
 		String message = msg.getContent();
+                System.out.println(this.getLocalName() + " got message " + msg.getContent() + ", answers.");
 		if(message.equals(DEFECT)) otherPlayerDefected = true;
 		else if(message.equals(COOPERATE)) otherPlayerDefected = false;
 

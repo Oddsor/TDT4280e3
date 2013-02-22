@@ -16,7 +16,7 @@ public class TitForEveryOtherTatAgent extends GeneralAgent{
 	@Override
 	void handleMessage(ACLMessage msg) {
 		String message = msg.getContent();
-
+                System.out.println(this.getLocalName() + " got message " + message + ", answers.");
 		if(message.equals(DEFECT)){
 
 			semaphore = otherPlayerDefected;
@@ -28,7 +28,6 @@ public class TitForEveryOtherTatAgent extends GeneralAgent{
 		}
 
 		if(message.equals(DILEMMA)){
-
 			sendMessage(msg.getSender(), (otherPlayerDefected && semaphore) ? DEFECT : COOPERATE);
 			
 		}

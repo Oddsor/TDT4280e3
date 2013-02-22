@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class TournamentLogger {
 	
-	ArrayList<String>	tournamentLog = new ArrayList<String>();
+	ArrayList<String> tournamentLog = new ArrayList<String>();
 	private static TournamentLogger singletonInstance;
 	
 	private TournamentLogger() {
@@ -12,7 +12,7 @@ public class TournamentLogger {
 	}
 	
 	//Vet ikke om du har noen sterke meninger om singletons som design patterns
-	//gjør det nå sånn i hvert fall =)
+	//gjÃ¸r det nÃ¥ sÃ¥nn i hvert fall =)
 	public static TournamentLogger getTournamentLogger(){
 		if( singletonInstance == null){
 			singletonInstance = new TournamentLogger();

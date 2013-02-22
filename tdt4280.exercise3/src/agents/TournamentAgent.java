@@ -108,8 +108,8 @@ public class TournamentAgent extends GeneralAgent {
         //Both have answered, send results. Won't get replies here so can send both without worry?
         if (fighterResponse != null && opponentResponse != null){
         	
-        	//TODO: Vurdere om vi skal bruke en annen message type her for å gjøre message handling 
-        	// litt fjongere i agentene. Ikke nødvendig, men kan gjøres.
+        	//TODO: Vurdere om vi skal bruke en annen message type her for Ã¥ gjÃ¸re message handling 
+        	// litt fjongere i agentene. Ikke nÃ¸dvendig, men kan gjÃ¸res.
         	sendMessage(contestants.get(currentFighter).getName(), opponentResponse);
             sendMessage(contestants.get(currentOpponent).getName(), fighterResponse);
            

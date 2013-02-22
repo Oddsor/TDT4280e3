@@ -12,7 +12,7 @@ public class DefectingAgent extends GeneralAgent {
    
 	@Override
 	void handleMessage(ACLMessage msg){
-	
+                System.out.println(this.getLocalName() + " got message " + msg.getContent() + ", answers.");
 		if(msg.getContent().equals(DILEMMA))
 			
 			sendMessage(msg.getSender(), DEFECT);

@@ -59,7 +59,8 @@ public class MyTournamentAgent extends GeneralAgent {
             if(!evalAgents[i].getName().getLocalName().toString().equals("ams") &&
                     !evalAgents[i].getName().getLocalName().toString().equals("df") &&
                     !evalAgents[i].getName().getLocalName().toString().equals("rma") &&
-                    !evalAgents[i].getName().getLocalName().toString().equals(this.getAID().getLocalName())){
+                    !evalAgents[i].getName().getLocalName().toString().equals(this.getAID().getLocalName()) &&
+                    !evalAgents[i].getName().getLocalName().contains("sniffer")){
                 contestants.add(evalAgents[i]);
             }
         }
@@ -105,7 +106,7 @@ public class MyTournamentAgent extends GeneralAgent {
     	System.out.println("TournamentAgent received message: "+msg.getContent()+" from "+ msg.getSender().getName());
     	
     	//TODO: Alt er drevet av meldingene man mottar, om en melding forsvinner
-    	// stopper alt uten at det blir forsøkt å innhente nytt svar.
+    	// stopper alt uten at det blir forsÃ¸kt Ã¥ innhente nytt svar.
     	if(msg.getSender().equals(contestants.get(currentFighter).getName()))
     		handleFighterResponse(msg);
     	
@@ -116,7 +117,7 @@ public class MyTournamentAgent extends GeneralAgent {
     
 private void handleFighterResponse(ACLMessage msg){
     	
-	System.out.println("Received fighter response from "+ msg.getSender().getName());
+	System.out.println("Received fighter response from "+ msg.getSender().getLocalName());
     	//If the answer is from the current fighter:
     	if(msg.getSender().equals(contestants.get(currentFighter).getName()))
     		
@@ -130,7 +131,7 @@ private void handleFighterResponse(ACLMessage msg){
     	
     }
 private void handleOpponentResponse(ACLMessage msg){
-	System.out.println("Received opponent response from "+msg.getSender().getName());	
+	System.out.println("Received opponent response from "+msg.getSender().getLocalName());	
 	opponentResponse = msg.getContent();
 	
 	handleResults();
@@ -192,7 +193,6 @@ private void handleNextRound(){
     		//One round complete, request new input from fighter:
     		System.out.println("Still more rounds to go. Sending out new DILEMMA\n\n");
     		sendMessage(contestants.get(currentFighter).getName(), DILEMMA);
-    		return;
     	}
     	else{
     		/*Done with fight, now we reset and start with a new opponent (or a 
@@ -232,8 +232,8 @@ private void handleNextRound(){
 		}else{
 			contestants.remove(currentFighter);
 			System.out.println("New fighter enters arena, it's " + 
-					contestants.get(currentFighter + 1).getName().getLocalName() +" and first opponent is " + 
-					contestants.get(currentFighter + 2).getName().getLocalName());
+					contestants.get(currentFighter).getName().getLocalName() +" and first opponent is " + 
+					contestants.get(currentFighter + 1).getName().getLocalName());
 			
 			currentOpponent = 1;
 			sendMessage(contestants.get(currentFighter).getName(), DILEMMA);
