@@ -88,7 +88,6 @@ public class TournamentAgent extends GeneralAgent {
      * the tournament.
      * @param msg 
      */
-    //TODO verifiser og fiks kontrollflyten.
     
     public void handleReturn(ACLMessage msg){
    

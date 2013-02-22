@@ -15,7 +15,8 @@ public class StochasticAgent extends GeneralAgent {
 
 	double NoFDefections=0;
 	double total =0;
-	@Override
+	
+        @Override
 	void handleMessage(ACLMessage msg) {
 
 		String message = msg.getContent();

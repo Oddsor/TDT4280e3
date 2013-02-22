@@ -42,7 +42,7 @@ public class MyTournamentAgent extends GeneralAgent {
             System.out.println(a.getName());
         }
         super.setup();
-//      startTournament(5);
+        //startTournament(5);
     }
     
     public void populateContestants(){
@@ -67,7 +67,6 @@ public class MyTournamentAgent extends GeneralAgent {
     }
     
     public void startTournament(int rounds){
-     
     	System.out.println("Got ordered to start tournament with " + rounds + " rounds!");
         currentOpponent = 1;
         this.rounds = rounds;
@@ -127,8 +126,6 @@ private void handleFighterResponse(ACLMessage msg){
         if(opponentResponse == null)
            	System.out.println("Have not received answer from opponent yet. Sending CFP");
         	sendMessage(contestants.get(currentOpponent).getName(), DILEMMA);
-               	
-    	
     }
 private void handleOpponentResponse(ACLMessage msg){
 	System.out.println("Received opponent response from "+msg.getSender().getLocalName());	
@@ -260,7 +257,9 @@ private void handleNextRound(){
         }
         if(msg.getPerformative()== ACLMessage.AGREE){
         	double R_SCORE = (Double.parseDouble(msg.getContent()))/ (double)rounds;
-        	System.out.println("\nAgent "+msg.getSender().getLocalName()+ "Got an R-SCORE of "+R_SCORE+ " Points.");
+        	//System.out.println("\nAgent "+msg.getSender().getLocalName()+ " got an R-SCORE of "+R_SCORE+ " Points.");
+                double finalScore = R_SCORE / contestants.size() - 1;
+                System.out.println("\nAgent "+msg.getSender().getLocalName()+ " got a final score of "+finalScore+ " points.");
         }
     }
 }

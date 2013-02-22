@@ -3,6 +3,8 @@ package agents;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  * 
  * General agent class that supports sending and
@@ -45,7 +47,7 @@ public abstract class GeneralAgent extends Agent {
 			@Override
 			public void action() {
                             GeneralAgent ag = (GeneralAgent) getMyAgent();
-                            ACLMessage msg = receive();
+                            ACLMessage msg = blockingReceive();
                             if (msg != null){
                                     try {
                                             ag.handleMessage(msg);
@@ -54,7 +56,6 @@ public abstract class GeneralAgent extends Agent {
                                             e.printStackTrace();
                                     }
                             }
-                            block(); //Nyttig for å stoppe cyclicbehaviour fra å loope i evigheter
                     }
 		});
 	}
