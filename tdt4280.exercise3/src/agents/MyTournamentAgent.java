@@ -259,8 +259,8 @@ private void handleNextRound(){
             handleReturn(msg);
         }
         if(msg.getPerformative()== ACLMessage.AGREE){
-       
-        	System.out.println("\nAgent "+msg.getSender().getLocalName()+ "Got a total of "+msg.getContent()+ " Points.");
+        	double R_SCORE = (Double.parseDouble(msg.getContent()))/ (double)rounds;
+        	System.out.println("\nAgent "+msg.getSender().getLocalName()+ "Got an R-SCORE of "+R_SCORE+ " Points.");
         }
     }
 }
