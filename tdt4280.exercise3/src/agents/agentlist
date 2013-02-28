@@ -1,0 +1,1 @@
+MyTournamentAgent:agents.MyTournamentAgent;Stochastic:agents.StochasticAgent;RandomAgent:agents.RandomAgent;Defector:agents.DefectingAgent;Mixed:agents.MixedAgent;TFT:agents.TitForTatAgent;TFEOT:agents.TitForEveryOthe
