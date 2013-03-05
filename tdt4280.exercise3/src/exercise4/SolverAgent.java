@@ -61,7 +61,8 @@ public abstract class SolverAgent extends Agent {
 			sendMessage(msg.getSender(), solve(x,y));
 			System.out.println(solve(x,y));
 			break;
-
+		case ACLMessage.CFP:
+			System.out.println("Call for proposal received: "+msg.getContent());
 		default:
 			break;
 		}

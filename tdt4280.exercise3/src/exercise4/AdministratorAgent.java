@@ -1,6 +1,7 @@
 package exercise4;
 
 import jade.core.Agent;
+import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.AMSService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.AMSAgentDescription;
@@ -29,7 +30,27 @@ public abstract class AdministratorAgent extends Agent {
         for(AMSAgentDescription a: solverAgents){
             System.out.println(a.getName());
         }
-        super.setup();
+        
+        addBehaviour(new CyclicBehaviour(this) {
+            public Agent getMyAgent() {
+                return myAgent;
+            }
+	@Override
+	public void action() {
+                    AdministratorAgent ag = (AdministratorAgent) getMyAgent();
+                    ACLMessage msg = blockingReceive();
+                    if (msg != null){
+                            try {
+                                    ag.handleMessage(msg);
+                                   
+                            } catch (Exception e) {
+                                    e.printStackTrace();
+                            }
+                    }
+            }
+        });
+        
+
        
     }
     
@@ -68,6 +89,17 @@ public abstract class AdministratorAgent extends Agent {
         msg.addReceiver(receiver);
         msg.setContent(content);
         send(msg);
+    }
+    
+    public void broadcastMessage(String Content, int type){
+    	
+    	ACLMessage msg = new ACLMessage(type);
+    	msg.setContent(Content);
+    	for (AMSAgentDescription ag : solverAgents) {
+			msg.addReceiver(ag.getName());
+		}
+    	
+    	send(msg);
     }
 
 }
