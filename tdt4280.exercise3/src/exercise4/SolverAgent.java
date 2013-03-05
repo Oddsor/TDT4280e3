@@ -62,12 +62,15 @@ public abstract class SolverAgent extends Agent {
 			System.out.println(solve(x,y));
 			break;
 		case ACLMessage.CFP:
+			
 			System.out.println("Call for proposal received: "+msg.getContent());
+			handleCFP(msg);
 		default:
 			break;
 		}
 	}
 	abstract String solve(double x, double y);
+	abstract void handleCFP(ACLMessage msg);
 }
 
 
