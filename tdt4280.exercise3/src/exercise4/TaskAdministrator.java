@@ -16,6 +16,8 @@ public class TaskAdministrator extends AdministratorAgent {
 
 	
 	String oplist[] = {"+","-","/","*"};
+	boolean semaphore = false;
+	String response;
 	
 	@Override
 	void handleMessage(ACLMessage msg) {
@@ -71,7 +73,12 @@ public class TaskAdministrator extends AdministratorAgent {
 	private String auctionJob(String operand1, String operand2, String operator){
 		
 		//TODO Implement actual auction protocol
+		response ="";
+		semaphore = false;
 		broadcastMessage("Solve this ", ACLMessage.CFP);
+		
+		
+		
 		return solveSimpleExpr(operand1,operand2,operator);
 	}
 	
