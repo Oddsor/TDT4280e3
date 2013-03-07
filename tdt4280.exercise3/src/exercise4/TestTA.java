@@ -17,6 +17,7 @@ import java.util.List;
 public class TestTA extends AdministratorAgent{
     List<ACLMessage> proposals;
     List<AID> solvers;
+    List<Expression> expressions;
 
     @Override
     public void setup() {
@@ -59,6 +60,14 @@ public class TestTA extends AdministratorAgent{
                 break;
             case ACLMessage.QUERY_REF:
                 System.out.println("Query-Ref received: " + msg.getPerformative());
+                
+                try{
+                	expressions.add(new Expression(msg.getContent()));
+                }
+                catch(Exception e){
+                	System.out.println("Exception caught");
+                }
+                
                 solvers = getSolvers("+");
                 for (AID s: solvers){
                     System.out.println(s.getLocalName());
