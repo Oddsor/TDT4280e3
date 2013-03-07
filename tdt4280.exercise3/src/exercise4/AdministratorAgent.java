@@ -1,11 +1,15 @@
 package exercise4;
 
+import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.AMSService;
+import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.AMSAgentDescription;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.SearchConstraints;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 
 import java.util.ArrayList;
@@ -54,6 +58,34 @@ public abstract class AdministratorAgent extends Agent {
        
     }
     
+    /**
+     * Searches for SolverAgents that provide solutions for a given operator.
+     * @param operator
+     * @return List of solvers
+     */
+    public List<AID> getSolvers(String operator){
+        List<AID> solvers = new ArrayList<AID>();
+        
+        DFAgentDescription dfa = new DFAgentDescription();
+        ServiceDescription sd = new ServiceDescription();
+        sd.addProtocols(operator); //Search for agent that has service protocol equal to operator
+        dfa.addServices(sd);
+        DFAgentDescription[] results = null;
+        try {
+            results = DFService.search(this, dfa);
+        } catch (FIPAException ex) {
+            Logger.getLogger(TaskAdministrator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        for (int i = 0; i < results.length; i++){
+            solvers.add(results[i].getName());
+        }
+        
+        return solvers;
+    }
+    
+    /**
+     * @deprecated We should instead search for solvers for a particular problem using getSolvers()
+     */
     public void populateSolvers(){
     	solverAgents = new ArrayList<AMSAgentDescription>();
         SearchConstraints sc = new SearchConstraints(); 
