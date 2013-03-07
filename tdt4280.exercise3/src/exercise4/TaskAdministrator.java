@@ -1,15 +1,8 @@
 package exercise4;
 
-import jade.core.AID;
-import jade.domain.DFService;
-import jade.domain.FIPAAgentManagement.DFAgentDescription;
-import jade.domain.FIPAAgentManagement.ServiceDescription;
-import jade.domain.FIPAException;
 import java.util.ArrayList;
-
 import jade.lang.acl.ACLMessage;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.List;
 
 /**
  *TaskAdministrator accepts ACL Messages. It accepts expressions in
@@ -25,6 +18,11 @@ public class TaskAdministrator extends AdministratorAgent {
 	String oplist[] = {"+","-","/","*"};
 	boolean semaphore = false;
 	String response;
+        
+        /**
+         * For every current expression we calculate we need to receive all propositions
+         */
+        List<ACLMessage> propositions;
 	
 	@Override
 	void handleMessage(ACLMessage msg) {
@@ -33,13 +31,17 @@ public class TaskAdministrator extends AdministratorAgent {
 				System.out.println("Query Ref received");
 				sendMessage(msg.getSender(), handleExpression(msg.getContent()));
 			break;
-
+                case ACLMessage.PROPOSE:
+                    handleProposal(msg);
 		default:
 			System.out.println("Unsupported Performative");
 			break;
 		}
-
 	}
+        
+        private void handleProposal(ACLMessage msg){
+            
+        }
 	
 	/**
 	 * 

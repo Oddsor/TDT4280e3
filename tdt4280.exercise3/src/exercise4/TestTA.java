@@ -13,6 +13,7 @@ import java.util.List;
  *
  * @author Odd
  */
+@SuppressWarnings("serial")
 public class TestTA extends AdministratorAgent{
     List<ACLMessage> proposals;
     List<AID> solvers;
@@ -62,7 +63,7 @@ public class TestTA extends AdministratorAgent{
                 for (AID s: solvers){
                     System.out.println(s.getLocalName());
                 }
-                proposals = new ArrayList<>();
+                proposals = new ArrayList<ACLMessage>();
                 //for(int i = 0; i < 3; i++){
                     for(AID s: solvers){
                         sendMessage(s, "5 + 5", ACLMessage.CFP);

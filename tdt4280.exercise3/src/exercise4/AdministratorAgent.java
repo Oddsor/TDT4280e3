@@ -10,7 +10,6 @@ import jade.domain.FIPAAgentManagement.AMSAgentDescription;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.SearchConstraints;
 import jade.lang.acl.ACLMessage;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
