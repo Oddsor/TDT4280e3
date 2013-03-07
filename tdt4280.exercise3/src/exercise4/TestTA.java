@@ -26,8 +26,12 @@ public class TestTA extends AdministratorAgent{
     void handleMessage(ACLMessage msg) {
         switch(msg.getPerformative()){
             case ACLMessage.PROPOSE:
+                System.out.println("Proposal received: " + msg.getPerformative());
                 proposals.add(msg);
+                System.out.println("Number of solvers: " + solvers.size() +
+                        ", number of proposals: " + proposals.size());
                 if(proposals.size() == solvers.size()){
+                    System.out.println("All proposals received");
                     AID best = proposals.get(0).getSender();
                     for(ACLMessage proposal: proposals){
                         String time = proposal.getContent().replaceFirst("bid\\(", "");
@@ -51,17 +55,20 @@ public class TestTA extends AdministratorAgent{
                     }
                     proposals.clear();
                 }
+                break;
             case ACLMessage.QUERY_REF:
+                System.out.println("Query-Ref received: " + msg.getPerformative());
                 solvers = getSolvers("+");
                 for (AID s: solvers){
                     System.out.println(s.getLocalName());
                 }
                 proposals = new ArrayList<>();
-                for(int i = 0; i < 3; i++){
+                //for(int i = 0; i < 3; i++){
                     for(AID s: solvers){
                         sendMessage(s, "5 + 5", ACLMessage.CFP);
                     }
-                }
+                //}
+                break;
         }
     }
     
