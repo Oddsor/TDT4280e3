@@ -5,7 +5,6 @@
 package exercise4;
 
 import jade.core.Agent;
-import jade.core.behaviours.DataStore;
 import jade.core.behaviours.WakerBehaviour;
 import jade.lang.acl.ACLMessage;
 
@@ -29,7 +28,9 @@ public class ReplyBehaviour extends WakerBehaviour{
         String[] expression = msg.getContent().split(" ");
         double leftOperand = Double.parseDouble(expression[0]);
         double rightOperand = Double.parseDouble(expression[2]);
-        a.solve(leftOperand, rightOperand);
+        
+        a.sendMessage(msg.getSender(), a.solve(leftOperand, rightOperand), ACLMessage.INFORM);
+        a.problemSolved(this);
     }
     
 }
