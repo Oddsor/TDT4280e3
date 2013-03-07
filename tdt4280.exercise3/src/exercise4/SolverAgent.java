@@ -8,7 +8,6 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 import java.util.LinkedList;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,9 +34,7 @@ public abstract class SolverAgent extends Agent {
     public void registerService(String operator) {
         DFAgentDescription dfa = new DFAgentDescription();
         dfa.addLanguages("MATH LOL");
-        ServiceDescription sd = new ServiceDescription();
-        sd.addProtocols(operator);
-        dfa.addServices(sd);
+        dfa.addOntologies(operator);
         try {
             DFService.register(this, dfa);
         } catch (FIPAException ex) {
@@ -106,6 +103,7 @@ public abstract class SolverAgent extends Agent {
     public void bid(ACLMessage msg){
         String bidString = "bid(";
         bidString += (getRelativeSpeed() / 1000) + " sec)";
+        System.out.println(this.getLocalName() + " bids: " + bidString);
         sendMessage(msg.getSender(), bidString, ACLMessage.PROPOSE);
     }
     
@@ -121,7 +119,7 @@ public abstract class SolverAgent extends Agent {
     public int getRelativeSpeed(){
         int relativeSpeed = replySpeed * 1000;
         
-        if(replyList.size() > 0){
+        if(!replyList.isEmpty()){
             for (int i = 0; i < replyList.size(); i++){
                 replySpeed += (int) replyList.get(i).getWakeupTime();
             }
