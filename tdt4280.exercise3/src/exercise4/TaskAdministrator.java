@@ -1,8 +1,15 @@
 package exercise4;
 
+import jade.core.AID;
+import jade.domain.DFService;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.domain.FIPAException;
 import java.util.ArrayList;
 
 import jade.lang.acl.ACLMessage;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *TaskAdministrator accepts ACL Messages. It accepts expressions in
@@ -70,14 +77,34 @@ public class TaskAdministrator extends AdministratorAgent {
 		
 	}
 	
+        /**
+         * Start auctioning by searching for agents with service protocols
+         * matching the operator.
+         * @param operand1
+         * @param operand2
+         * @param operator
+         * @return 
+         */
 	private String auctionJob(String operand1, String operand2, String operator){
-		
+            DFAgentDescription dfa = new DFAgentDescription();
+            ServiceDescription sd = new ServiceDescription();
+            sd.addProtocols(operator); //Search for agent that has service protocol equal to operator
+            dfa.addServices(sd);
+            DFAgentDescription[] results = null;
+            try {
+                results = DFService.search(this, dfa);
+            } catch (FIPAException ex) {
+                Logger.getLogger(TaskAdministrator.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            AID[] solvers = new AID[results.length];
+            for (int i = 0; i < results.length; i++){
+                solvers[i] = results[i].getName();
+            }
+            
 		//TODO Implement actual auction protocol
 		response ="";
 		semaphore = false;
 		broadcastMessage("Solve this ", ACLMessage.CFP);
-		
-		
 		
 		return solveSimpleExpr(operand1,operand2,operator);
 	}

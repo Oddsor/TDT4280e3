@@ -7,6 +7,14 @@ import jade.lang.acl.ACLMessage;
 @SuppressWarnings("serial")
 public class MultiplicationSolver extends SolverAgent {
 
+    @Override
+    public void setup() {
+        super.setup();
+        registerService("*");
+    }
+    
+
+    @Override
 	String solve(double x, double y) {
 		double result = x*y;
 		return ""+result;
@@ -14,9 +22,6 @@ public class MultiplicationSolver extends SolverAgent {
 
 	@Override
 	void handleCFP(ACLMessage msg) {
-		if(msg.equals("*")) sendMessage(msg.getSender(), "1", ACLMessage.PROPOSE);
-		
+		if(msg.getContent().contains("*")) sendMessage(msg.getSender(), "1", ACLMessage.PROPOSE);
 	}
-
-
 }
