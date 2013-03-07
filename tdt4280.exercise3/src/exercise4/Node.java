@@ -1,10 +1,17 @@
 package exercise4;
 
+import java.util.ArrayList;
+import java.util.List;
+/**
+ * Implements a Node-class for building trees.
+ * @author Andreas
+ *
+ */
 public class Node {
 
 	Node parent;
-	Node[] children = new Node[2];
-	String value;
+	List<Node> children = new ArrayList<Node>();
+	Object value;
 
 	public Node getParent() {
 		return parent;
@@ -14,32 +21,32 @@ public class Node {
 		this.parent = parent;
 	}
 
-	public Node[] getChildren() {
+	public List<Node> getChildren() {
 		return children;
 	}
-	
-	public void addChildLeft(Node n){
-		children[0] = n;
+
+	public void addChild(Node n){
+		children.add(n);
 	}
 
-	public void addChildRight(Node n){
-		children[1] = n;
-	}
-	
-	public void setChildren(Node[] children) {
+	public void setChildren(List<Node> children) {
 		this.children = children;
 	}
 
-	public String getValue() {
+	public Object getValue() {
 		return value;
 	}
 
-	public void setValue(String value) {
+	public void setValue(Object value) {
 		this.value = value;
 	}
 
-	public Node(String value) {
+	public Node(Object value) {
 		this.value = value;
+	}
+	
+	boolean isLeaf(){
+		return children.size()==0 ? true : false;
 	}
 
 }
