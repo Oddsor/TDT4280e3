@@ -9,7 +9,6 @@ import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.AMSAgentDescription;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.SearchConstraints;
-import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 
 import java.util.ArrayList;
@@ -29,12 +28,6 @@ public abstract class AdministratorAgent extends Agent {
 	
     @Override
     public void setup() {
-    
-    	populateSolvers();
-        for(AMSAgentDescription a: solverAgents){
-            System.out.println(a.getName());
-        }
-        
         addBehaviour(new CyclicBehaviour(this) {
             public Agent getMyAgent() {
                 return myAgent;
@@ -53,9 +46,6 @@ public abstract class AdministratorAgent extends Agent {
                     }
             }
         });
-        
-
-       
     }
     
     /**
@@ -67,14 +57,15 @@ public abstract class AdministratorAgent extends Agent {
         List<AID> solvers = new ArrayList<AID>();
         
         DFAgentDescription dfa = new DFAgentDescription();
-        ServiceDescription sd = new ServiceDescription();
-        sd.addProtocols(operator); //Search for agent that has service protocol equal to operator
-        dfa.addServices(sd);
+        dfa.addLanguages("MATH LOL");
+        dfa.addOntologies(operator);
+        
         DFAgentDescription[] results = null;
         try {
             results = DFService.search(this, dfa);
         } catch (FIPAException ex) {
             Logger.getLogger(TaskAdministrator.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
         for (int i = 0; i < results.length; i++){
             solvers.add(results[i].getName());
@@ -109,6 +100,13 @@ public abstract class AdministratorAgent extends Agent {
     
 	abstract void handleMessage(ACLMessage msg);
 	
+        /**
+         * 
+         * @param receiver
+         * @param content 
+         * @deprecated Should just use the other function since we use many different
+         * performatives.
+         */
 	public void sendMessage(jade.core.AID receiver, String content){
         ACLMessage msg = new ACLMessage(ACLMessage.CFP);
         msg.addReceiver(receiver);
