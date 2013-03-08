@@ -78,7 +78,6 @@ public class TaskAdministrator extends AdministratorAgent {
                 if(solvables.size() == 0){
                     System.out.println("Done calculating, answer is: " + expression.root.value);
                 }else{
-                    currentPartial = solvables.get(0);
                     auctionJob(solvables.get(0));
                 }
             }
@@ -124,7 +123,7 @@ public class TaskAdministrator extends AdministratorAgent {
             proposals.clear();
             solvables.remove(0);
             if(!solvables.isEmpty()){
-                currentPartial = solvables.get(0);
+                
                 auctionJob(solvables.get(0));
             }
         }
@@ -139,7 +138,6 @@ public class TaskAdministrator extends AdministratorAgent {
 		expression = new PostfixExpression(expr);
                 solvables = expression.getLeafExpr();
                 String firstExp = solvables.get(0);
-                currentPartial = firstExp;
                 auctionJob(firstExp);
 	}
 	
@@ -150,6 +148,7 @@ public class TaskAdministrator extends AdministratorAgent {
          * @return 
          */
 	private void auctionJob(String expression){
+            currentPartial = expression;
             solvers = getSolvers(expression.split(" ")[2]);
             for (AID s: solvers){
                 System.out.println(s.getLocalName());
