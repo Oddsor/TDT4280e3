@@ -102,7 +102,7 @@ public class PostfixExpression {
 		String p ="";
 		for(Node n : list){
 			for(Node c : n.getChildren()){
-				p += c.getValue();
+				p = c.getValue()+ " "+p;
 			}
 			p+=n.getValue();
 			
