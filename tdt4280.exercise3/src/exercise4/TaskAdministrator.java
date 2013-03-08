@@ -23,6 +23,7 @@ public class TaskAdministrator extends AdministratorAgent {
         //Map<AID, String> expectedReturn;
         String currentPartial;
         List<String> solvables;
+        AID sender;
         
         LinkedList<Object[]> expectedReturn;
 
@@ -39,6 +40,7 @@ public class TaskAdministrator extends AdministratorAgent {
             switch (msg.getPerformative()) {
             case ACLMessage.QUERY_REF:
                 System.out.println("Query Ref received");
+                sender = msg.getSender();
                 handleExpression(msg.getContent());
             break;
             case ACLMessage.PROPOSE:
@@ -76,6 +78,7 @@ public class TaskAdministrator extends AdministratorAgent {
                 System.out.println("Getting new sub-expressions");
                 solvables = expression.getLeafExpr();
                 if(solvables.size() == 0){
+                    sendMessage(sender, "" + expression.root.getValue(), ACLMessage.INFORM);
                     System.out.println("Done calculating, answer is: " + expression.root.value);
                 }else{
                     auctionJob(solvables.get(0));
