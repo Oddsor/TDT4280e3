@@ -17,6 +17,7 @@ import java.util.List;
 public class TestTA extends AdministratorAgent{
     List<ACLMessage> proposals;
     List<AID> solvers;
+    int globCount = 0;
 
     @Override
     public void setup() {
@@ -55,6 +56,10 @@ public class TestTA extends AdministratorAgent{
                         }
                     }
                     proposals.clear();
+                    if(globCount < 5){
+                        sendMessage(this.getAID(), "", ACLMessage.QUERY_REF);
+                        globCount++;
+                    }
                 }
                 break;
             case ACLMessage.QUERY_REF:

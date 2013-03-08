@@ -92,7 +92,7 @@ public abstract class SolverAgent extends Agent {
                 break;
             case ACLMessage.ACCEPT_PROPOSAL:
                 //Proposal was accepted, solve new problem.
-                replyList.add(new ReplyBehaviour(this, getRelativeSpeed(), receivedProblem));
+                replyList.add(new ReplyBehaviour(this, getRelativeSpeed(true), receivedProblem));
                 addBehaviour(replyList.getLast());
                 break;
             default:
@@ -102,7 +102,7 @@ public abstract class SolverAgent extends Agent {
     
     public void bid(ACLMessage msg){
         String bidString = "bid(";
-        bidString += (getRelativeSpeed() / 1000) + " sec)";
+        bidString += getRelativeSpeed(false) + " sec)";
         System.out.println(this.getLocalName() + " bids: " + bidString);
         sendMessage(msg.getSender(), bidString, ACLMessage.PROPOSE);
     }
@@ -116,15 +116,11 @@ public abstract class SolverAgent extends Agent {
      * time that is left in all remaining behaviours.
      * @return 
      */
-    public int getRelativeSpeed(){
-        int relativeSpeed = replySpeed * 1000;
-        
-        if(!replyList.isEmpty()){
-            for (int i = 0; i < replyList.size(); i++){
-                replySpeed += (int) replyList.get(i).getWakeupTime();
-            }
-        } 
-        return relativeSpeed;
+    public int getRelativeSpeed(boolean milliseconds){
+        int returnValue = replySpeed;
+        returnValue += replyList.size();
+        if(milliseconds) return returnValue * 1000;
+        return returnValue;
     }
 
     abstract String solve(double x, double y);
