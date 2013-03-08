@@ -50,8 +50,9 @@ public class TaskAdministrator extends AdministratorAgent {
                         handleSolvedExpression(msg);
                     }
                 }
+                break;
             default:
-                    System.out.println("Unsupported Performative");
+                    System.out.println("Unsupported Performative" + msg.getPerformative(msg.getPerformative()));
                     break;
             }
 	}
@@ -74,7 +75,12 @@ public class TaskAdministrator extends AdministratorAgent {
             if(expectedReturn.isEmpty()){
                 System.out.println("Getting new sub-expressions");
                 solvables = expression.getLeafExpr();
-                auctionJob(solvables.get(0));
+                if(solvables.size() == 0){
+                    System.out.println("Done calculating, answer is: " + expression.root.value);
+                }else{
+                    currentPartial = solvables.get(0);
+                    auctionJob(solvables.get(0));
+                }
             }
         }
         
@@ -118,6 +124,7 @@ public class TaskAdministrator extends AdministratorAgent {
             proposals.clear();
             solvables.remove(0);
             if(!solvables.isEmpty()){
+                currentPartial = solvables.get(0);
                 auctionJob(solvables.get(0));
             }
         }
