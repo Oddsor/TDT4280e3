@@ -132,6 +132,28 @@ public class PostfixExpression {
 	}
 	
 	public void insertPartial(String value, String oldNode){
+		insertion(value, oldNode.split(" "), root);
+	}
+	
+	private void insertion(String value, String[] oldNode, Node root){
+
+		
+		if(oldNode.length > 2){
+			if(oldNode[2].equals(root.getValue())){
+				List<Node> children = root.getChildren();
+				
+				if(oldNode[0].equals(children.get(1).getValue()) && 
+						oldNode[1].equals(children.get(0).getValue()) ){
+					root.setValue(value);
+					root.setChildren(new ArrayList<Node>());
+				}		
+			}	
+		}
+		
+			for(Node n : root.getChildren()){
+				insertion(value, oldNode, n);
+		
+		}
 		
 	}
 
@@ -139,19 +161,20 @@ public class PostfixExpression {
 
 		PostfixExpression ex = new PostfixExpression("10 20 + 4 4 * +");
 		System.out.println(ex.getExpression());
-		PostfixExpression ex2 = new PostfixExpression("7 2 - 5 4 * + 10 +");
-		System.out.println(ex2.getExpression());
-		PostfixExpression ex3 = new PostfixExpression("5 1 2 + 4 * + 3 -");
-		//		System.out.println(ex3.getExpression());
-
-//		List<Node> list = (ArrayList<Node>) ex.getLeafExpr();
-//		List<Node> list1 = (ArrayList<Node>) ex2.getLeafExpr();
-
+		
 		ArrayList<String> aList = (ArrayList<String>) ex.getLeafExpr();
 		
-		for (String string : aList) {
-			System.out.println(string);
-		}
+//		for (String string : aList) {
+//			System.out.println(string);
+//		}
+		
+		ex.insertPartial("30","10 20 +");
+		
+		System.out.println(ex.getExpression());
+		
+		ex.insertPartial("16","4 4 *");
+		
+		System.out.println(ex.getExpression());
 		
 	}
 }
