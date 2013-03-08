@@ -77,14 +77,6 @@ public abstract class SolverAgent extends Agent {
 
     private void handleMessage(ACLMessage msg) {
         switch (msg.getPerformative()) {
-            case ACLMessage.QUERY_IF:
-
-                String msgArray[] = msg.getContent().split(",");
-                double x = Double.parseDouble(msgArray[0]);
-                double y = Double.parseDouble(msgArray[1]);
-                sendMessage(msg.getSender(), solve(x, y), ACLMessage.CFP);
-                System.out.println(solve(x, y));
-                break;
             case ACLMessage.CFP:
                 System.out.println("Call for proposal received: " + msg.getContent());
                 receivedProblem = msg;
