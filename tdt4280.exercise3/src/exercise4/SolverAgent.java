@@ -63,7 +63,7 @@ public abstract class SolverAgent extends Agent {
             @Override
             public void action() {
                 SolverAgent ag = (SolverAgent) getMyAgent();
-                ACLMessage msg = blockingReceive();
+                ACLMessage msg = receive();
                 if (msg != null) {
                     try {
                         ag.handleMessage(msg);

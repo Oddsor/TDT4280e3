@@ -3,6 +3,7 @@ package exercise4;
 import jade.core.AID;
 import java.util.ArrayList;
 import jade.lang.acl.ACLMessage;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +22,15 @@ public class TaskAdministrator extends AdministratorAgent {
         Map<AID, String> expectedReturn;
         String currentPartial;
         List<String> solvables;
+
+    @Override
+    public void setup() {
+        super.setup(); //To change body of generated methods, choose Tools | Templates.
+        expectedReturn = new HashMap<AID, String>();
+    }
 	
+        
+        
 	@Override
 	void handleMessage(ACLMessage msg) {
             switch (msg.getPerformative()) {

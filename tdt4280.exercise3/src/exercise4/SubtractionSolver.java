@@ -13,7 +13,7 @@ public class SubtractionSolver extends SolverAgent {
     @Override
     public void setup() {
         super.setup();
-        registerService("*");
+        registerService("-");
     }
     
         @Override
