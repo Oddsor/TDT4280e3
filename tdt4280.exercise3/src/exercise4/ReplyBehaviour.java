@@ -27,7 +27,7 @@ public class ReplyBehaviour extends WakerBehaviour{
     protected void onWake() {
         String[] expression = msg.getContent().split(" ");
         double leftOperand = Double.parseDouble(expression[0]);
-        double rightOperand = Double.parseDouble(expression[2]);
+        double rightOperand = Double.parseDouble(expression[1]);
         
         a.sendMessage(msg.getSender(), a.solve(leftOperand, rightOperand), ACLMessage.INFORM);
         a.problemSolved(this);
