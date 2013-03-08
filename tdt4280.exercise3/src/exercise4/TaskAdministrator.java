@@ -4,6 +4,7 @@ import jade.core.AID;
 import java.util.ArrayList;
 import jade.lang.acl.ACLMessage;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,14 +20,16 @@ public class TaskAdministrator extends AdministratorAgent {
         PostfixExpression expression;
         List<AID> solvers;
         List<ACLMessage> proposals;
-        Map<AID, String> expectedReturn;
+        //Map<AID, String> expectedReturn;
         String currentPartial;
         List<String> solvables;
+        
+        LinkedList<Object[]> expectedReturn;
 
     @Override
     public void setup() {
         super.setup(); //To change body of generated methods, choose Tools | Templates.
-        expectedReturn = new HashMap<AID, String>();
+        expectedReturn = new LinkedList<Object[]>();
     }
 	
         
@@ -42,8 +45,10 @@ public class TaskAdministrator extends AdministratorAgent {
                 handleProposal(msg);
                 break;
             case ACLMessage.INFORM:
-                if(expectedReturn.containsKey(msg.getSender())){
-                    handleSolvedExpression(msg);
+                for(Object[] o: expectedReturn){
+                    if(o[0].equals(msg.getSender())){
+                        handleSolvedExpression(msg);
+                    }
                 }
             default:
                     System.out.println("Unsupported Performative");
@@ -52,12 +57,22 @@ public class TaskAdministrator extends AdministratorAgent {
 	}
         
         private void handleSolvedExpression(ACLMessage msg){
-            String relatedExpression = expectedReturn.get(msg.getSender());
+            int pointer = 0;
+            for(int i = 0; i < expectedReturn.size(); i++){
+                if(expectedReturn.get(i)[0].equals(msg.getSender())){
+                    pointer = i;
+                    break;
+                }
+            }
+            String relatedExpression = (String) expectedReturn.get(pointer)[1];
+            
+            System.out.println("Msg: " + msg.getContent() + ", expression: " + relatedExpression);
             
             expression.insertPartial(msg.getContent(), relatedExpression);
             
-            expectedReturn.remove(msg.getSender());
+            expectedReturn.remove(pointer);
             if(expectedReturn.isEmpty()){
+                System.out.println("Getting new sub-expressions");
                 solvables = expression.getLeafExpr();
                 auctionJob(solvables.get(0));
             }
@@ -85,12 +100,15 @@ public class TaskAdministrator extends AdministratorAgent {
                             replaceFirst(" sec\\)", "");
                 int bestTime = Integer.parseInt(bestTimeString);
                 int propTime = Integer.parseInt(time);
-                if (bestTime < propTime) {
+                if (bestTime > propTime) {
                     best = proposal.getSender();
                 }
             }
             sendMessage(best, "", ACLMessage.ACCEPT_PROPOSAL);
-            expectedReturn.put(best, currentPartial);
+            Object[] ob = new Object[2];
+            ob[0] = best;
+            ob[1] = currentPartial;
+            expectedReturn.add(ob);
             System.out.println("Accepting proposal from " + best.getLocalName());
             for(ACLMessage proposal: proposals){
                 if(!proposal.getSender().equals(best)){
@@ -114,6 +132,7 @@ public class TaskAdministrator extends AdministratorAgent {
 		expression = new PostfixExpression(expr);
                 solvables = expression.getLeafExpr();
                 String firstExp = solvables.get(0);
+                currentPartial = firstExp;
                 auctionJob(firstExp);
 	}
 	
