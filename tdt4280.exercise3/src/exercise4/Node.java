@@ -48,5 +48,12 @@ public class Node {
 	boolean isLeaf(){
 		return children.size()==0 ? true : false;
 	}
+	
+	boolean childrenAreLeaf(){
+		for(Node child : children){
+			if(!child.isLeaf()) return false;
+		}
+		return true;
+	}
 
 }

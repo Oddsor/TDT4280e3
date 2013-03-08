@@ -17,7 +17,7 @@ import java.util.List;
 public class TestTA extends AdministratorAgent{
     List<ACLMessage> proposals;
     List<AID> solvers;
-    List<Expression> expressions;
+    List<PostfixExpression> expressions;
 
     @Override
     public void setup() {
@@ -62,7 +62,7 @@ public class TestTA extends AdministratorAgent{
                 System.out.println("Query-Ref received: " + msg.getPerformative());
                 
                 try{
-                	expressions.add(new Expression(msg.getContent()));
+                	expressions.add(new PostfixExpression(msg.getContent()));
                 }
                 catch(Exception e){
                 	System.out.println("Exception caught");

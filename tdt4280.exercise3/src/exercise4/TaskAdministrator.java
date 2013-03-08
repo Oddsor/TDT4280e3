@@ -116,7 +116,7 @@ public class TaskAdministrator extends AdministratorAgent {
 				
 				String operator = exprArray[i];
 				
-				stack.add(auctionJob(operand1, operand2, operator));
+			
 				
 			}
 		}
