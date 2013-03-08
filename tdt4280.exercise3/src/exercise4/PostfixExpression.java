@@ -79,23 +79,18 @@ public class PostfixExpression {
 		return false;
 	}
 
-	public List<Node> getLeafExpr(){
-		return depthFirstLTR(root, new ArrayList<Node>());
-
+	public List<String> getLeafExpr(){
+		 List<Node> list = depthFirstLTR(root, new ArrayList<Node>());
+		 return getNodeArray(list);
 	}
 
 	private List<Node> depthFirstLTR(Node root, List<Node> l){
-//		System.out.println("Checking node with value: "+root.getValue());
-//		System.out.println("Children are leaf? "+root.childrenAreLeaf());
-//		System.out.println("Root is leaf: "+root.isLeaf()+"\n");
 
 		for (Node c : root.getChildren()) {
-//			System.out.println("Value of child: "+c.getValue());
 		}
 
 		if(root.childrenAreLeaf() && !root.isLeaf()){
 			l.add(root);
-//			System.out.println(root.getValue()+ " added");
 		}
 
 		for (Node c : root.getChildren()) {
@@ -106,6 +101,22 @@ public class PostfixExpression {
 		return l;
 	}
 
+	public List<String> getNodeArray(List<Node> list){
+		String p = "";
+		List<String> stringList = new ArrayList<String>();
+		for(Node n : list){
+			
+			p = (String)n.getValue();
+			for(Node c : n.getChildren()){
+				p =  c.getValue()+ " "+p;
+			}
+			
+			stringList.add(p);
+
+		}
+		return stringList;
+	}
+	
 	public String printNodeList(List<Node> list){
 		String p = "";
 		for(Node n : list){
@@ -120,7 +131,7 @@ public class PostfixExpression {
 		return p;
 	}
 	
-	public void insertPartial(String value){
+	public void insertPartial(String value, String oldNode){
 		
 	}
 
@@ -133,11 +144,14 @@ public class PostfixExpression {
 		PostfixExpression ex3 = new PostfixExpression("5 1 2 + 4 * + 3 -");
 		//		System.out.println(ex3.getExpression());
 
-		List<Node> list = (ArrayList<Node>) ex.getLeafExpr();
-		List<Node> list1 = (ArrayList<Node>) ex2.getLeafExpr();
+//		List<Node> list = (ArrayList<Node>) ex.getLeafExpr();
+//		List<Node> list1 = (ArrayList<Node>) ex2.getLeafExpr();
 
-		System.out.println(ex2.printNodeList(list));
-		System.out.println(ex2.printNodeList(list1));
-
+		ArrayList<String> aList = (ArrayList<String>) ex.getLeafExpr();
+		
+		for (String string : aList) {
+			System.out.println(string);
+		}
+		
 	}
 }

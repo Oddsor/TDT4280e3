@@ -70,7 +70,12 @@ public class Expression {
 		}
 	}
 		
+	
+	void insert(String oldNode, String newNode ){
 		
+	
+	}
+	
 	
 	
 	boolean isInOplist(String n){
