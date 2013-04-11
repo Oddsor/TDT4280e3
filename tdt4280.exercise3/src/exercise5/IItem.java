@@ -15,5 +15,7 @@ public interface IItem {
      * The cost of this object, selling at any lower will result in a loss
      * @return 
      */
-    public double productionCost();
+    public int productionCost();
+    
+    public int getPrice();
 }
