@@ -7,7 +7,6 @@ package exercise5;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.WakerBehaviour;
-import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 

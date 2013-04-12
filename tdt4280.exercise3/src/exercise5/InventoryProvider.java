@@ -10,11 +10,9 @@ import java.util.Random;
  * @author Odd
  */
 public class InventoryProvider {
-    
-    private List<IItem> itemBase;
 
-    public InventoryProvider() {
-        this.itemBase = new ArrayList<IItem>();
+    public static List<IItem> getItemList() {
+        List<IItem> itemBase = new ArrayList<IItem>();
         //TODO add items
         itemBase.add(new Item("Banana printer", 200));
         itemBase.add(new Item("Television", 400));
@@ -23,10 +21,11 @@ public class InventoryProvider {
         itemBase.add(new Item("Iron Man dvd", 100));
         itemBase.add(new Item("Avatar 3d bluray", 150));
         itemBase.add(new Item("Russian caviar", 200));
-        
+        return itemBase;
     }
     
-    public List<IItem> inventory(int size, List<IItem> excludedItems){
+    public static List<IItem> inventory(int size, List<IItem> excludedItems){
+        List<IItem> itemBase = getItemList();
         if(size > itemBase.size()){
             try{
                 throw new Exception("Inventory too large (" + size + "), itembase"
@@ -38,23 +37,19 @@ public class InventoryProvider {
             
         List<IItem> inventory = new ArrayList<IItem>();
         Random rand = new Random();
-        for(int i = 0; i < size; i++){
-            List<IItem> culledItems = new ArrayList<IItem>(itemBase);
-            if(excludedItems != null){
-                culledItems.removeAll(excludedItems);
+        for(IItem excluded: excludedItems){
+            for(int i = 0; i < itemBase.size();i++){
+                if(excluded.getName().equals(itemBase.get(i).getName())){
+                    itemBase.remove(i);
+                    break;
+                }
             }
-            culledItems.removeAll(inventory);
-            inventory.add(culledItems.get(rand.nextInt(culledItems.size())));
+        }
+        for(int i = 0; i < size; i++){
+            int pointer = rand.nextInt(itemBase.size());
+            inventory.add(itemBase.get(pointer));
+            itemBase.remove(pointer);
         }
         return inventory;
-    }
-
-    public static InventoryProvider getInstance() {
-        return InventoryProviderHolder.INSTANCE;
-    }
-    
-    private static class InventoryProviderHolder {
-
-        private static final InventoryProvider INSTANCE = new InventoryProvider();
     }
 }
