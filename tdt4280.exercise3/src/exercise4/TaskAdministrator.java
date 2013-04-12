@@ -3,10 +3,8 @@ package exercise4;
 import jade.core.AID;
 import java.util.ArrayList;
 import jade.lang.acl.ACLMessage;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 /**
  *TaskAdministrator accepts ACL Messages. It accepts expressions in

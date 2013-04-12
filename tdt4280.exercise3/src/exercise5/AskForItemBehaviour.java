@@ -20,6 +20,7 @@ public class AskForItemBehaviour extends OneShotBehaviour{
     
     @Override
     public void action() {
+        System.out.println("Asking if anyone has the item " + item.getName());
         ACLMessage ask = new ACLMessage(ACLMessage.QUERY_IF);
         
         List<AID> agents = TradingAgent.getOtherAgents(myAgent);

@@ -28,6 +28,7 @@ public class HandleOffersBehaviour extends WakerBehaviour{
 
     @Override
     public void onStart() {
+        System.out.println("Done waiting for offers, picking best offer for " + item.getName());
         TradingAgent agent = (TradingAgent) myAgent;
         Map<AID, Integer> offers = agent.pullOffers(item);
         Set<AID> sellers = offers.keySet();
@@ -40,6 +41,7 @@ public class HandleOffersBehaviour extends WakerBehaviour{
             }
         }
         if(agent.acceptPrice(item, lowestPrice)){
+            System.out.println(bestSeller.getLocalName() + " had the best offer, and we accept it.");
             myAgent.addBehaviour(new BuyItemBehaviour(myAgent, bestSeller, item, lowestPrice));
         }else{
             //TODO try to get lower price somehow

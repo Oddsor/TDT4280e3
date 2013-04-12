@@ -14,8 +14,16 @@ public class InventoryProvider {
     private List<IItem> itemBase;
 
     public InventoryProvider() {
-        List<IItem> itemBase = new ArrayList<IItem>();
+        this.itemBase = new ArrayList<IItem>();
         //TODO add items
+        itemBase.add(new Item("Banana printer", 200));
+        itemBase.add(new Item("Television", 400));
+        itemBase.add(new Item("Laser printer", 300));
+        itemBase.add(new Item("Wii U", 350));
+        itemBase.add(new Item("Iron Man dvd", 100));
+        itemBase.add(new Item("Avatar 3d bluray", 150));
+        itemBase.add(new Item("Russian caviar", 200));
+        
     }
     
     public List<IItem> inventory(int size, List<IItem> excludedItems){

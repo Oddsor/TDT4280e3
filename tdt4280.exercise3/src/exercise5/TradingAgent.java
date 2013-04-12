@@ -32,34 +32,42 @@ public class TradingAgent extends Agent{
     
     @Override
     protected void setup() {
-        inventory = InventoryProvider.getInstance().inventory(5, null);
-        wishList = InventoryProvider.getInstance().inventory(5, inventory);
+        inventory = InventoryProvider.getInstance().inventory(3, null);
+        wishList = InventoryProvider.getInstance().inventory(3, inventory);
         List<IItem> purchased = new ArrayList<IItem>();
         
         offers = new HashMap<IItem, Map<AID,Integer>>();
         bids = new HashMap<IItem, Map<AID,Integer>>();
-        
+        registerService(this);
         addBehaviour(new CyclicBehaviour(this) {
 
             @Override
             public void action() {
                 ACLMessage msg = receive();
-                if(msg.getPerformative() == ACLMessage.QUERY_IF){
-                    for(IItem item: inventory){
-                        if(msg.getContent().equals(item.getName())){
-                            addBehaviour(new OfferItemBehaviour(myAgent, item, msg));
+                if(msg != null){
+                    if(msg.getPerformative() == ACLMessage.QUERY_IF){
+                        for(IItem item: inventory){
+                            if(msg.getContent().equals(item.getName())){
+                                addBehaviour(new OfferItemBehaviour(myAgent, item, msg));
+                            }
                         }
+                    }else if(msg.getPerformative() == ACLMessage.INFORM){
+                        addOffer(msg);
+                    }else if(msg.getPerformative() == ACLMessage.AGREE){
+                        //TODO sell item, must somehow store price
                     }
-                }else if(msg.getPerformative() == ACLMessage.INFORM){
-                    addOffer(msg);
-                }else if(msg.getPerformative() == ACLMessage.AGREE){
-                    //TODO sell item, must somehow store price
                 }
             }
         });
         addBehaviour(new AskForItemBehaviour(this, wishList.get(0)));
     }
     
+    /**
+     * We will expect to receive offers on an item. The purpose of this function
+     * is to allow for ignoring offers that are received after we've started
+     * handling offers in the wakerbehaviour.
+     * @param item 
+     */
     public void expectOffers(IItem item){
         offers.put(item, new HashMap<AID, Integer>());
     }
@@ -78,8 +86,25 @@ public class TradingAgent extends Agent{
         
     }
     
+    /**
+     * Get all the offers made for an item. This removes the key from the offers-
+     * map as well so that further messages with offers are ignored.
+     * @param item
+     * @return 
+     */
     public Map<AID, Integer> pullOffers(IItem item){
         return offers.remove(item);
+    }
+    
+     public static void registerService(Agent myself) {
+        DFAgentDescription dfa = new DFAgentDescription();
+        dfa.addLanguages("TRADE");
+        dfa.addOntologies("trade");
+        try {
+            DFService.register(myself, dfa);
+        } catch (FIPAException ex) {
+            ex.printStackTrace();
+        }
     }
     
     public static List<AID> getOtherAgents(Agent myself){
@@ -87,7 +112,7 @@ public class TradingAgent extends Agent{
         
         DFAgentDescription dfa = new DFAgentDescription();
         dfa.addLanguages("TRADE");
-        dfa.addOntologies("");
+        dfa.addOntologies("trade");
         
         DFAgentDescription[] results = null;
         try {
@@ -103,6 +128,7 @@ public class TradingAgent extends Agent{
     }
 
     boolean acceptPrice(IItem item, int lowestPrice) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO fix logic for either accepting or refusing an offer
+        return true;
     }
 }
