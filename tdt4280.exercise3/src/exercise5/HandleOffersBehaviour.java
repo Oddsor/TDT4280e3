@@ -30,6 +30,7 @@ public class HandleOffersBehaviour extends WakerBehaviour{
         System.out.println("Done waiting for offers, picking best offer for " + item.getName());
         TradingAgent agent = (TradingAgent) myAgent;
         Map<AID, Integer> offers = agent.pullOffers(item);
+        System.out.println("We've received " + offers.size() + " offers.");
         Set<AID> sellers = offers.keySet();
         int lowestPrice = 1000000000;
         AID bestSeller = null;

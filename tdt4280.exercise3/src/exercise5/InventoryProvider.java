@@ -37,11 +37,13 @@ public class InventoryProvider {
             
         List<IItem> inventory = new ArrayList<IItem>();
         Random rand = new Random();
-        for(IItem excluded: excludedItems){
-            for(int i = 0; i < itemBase.size();i++){
-                if(excluded.getName().equals(itemBase.get(i).getName())){
-                    itemBase.remove(i);
-                    break;
+        if(excludedItems != null){
+            for(IItem excluded: excludedItems){
+                for(int i = 0; i < itemBase.size();i++){
+                    if(excluded.getName().equals(itemBase.get(i).getName())){
+                        itemBase.remove(i);
+                        break;
+                    }
                 }
             }
         }
