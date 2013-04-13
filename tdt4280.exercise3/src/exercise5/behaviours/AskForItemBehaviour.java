@@ -1,5 +1,7 @@
-package exercise5;
+package exercise5.behaviours;
 
+import exercise5.IItem;
+import exercise5.TradingAgent;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.OneShotBehaviour;
@@ -30,7 +32,7 @@ public class AskForItemBehaviour extends OneShotBehaviour{
         ask.setContent(item.getName());
         TradingAgent agent = (TradingAgent) myAgent;
         agent.expectOffers(item);
-        myAgent.addBehaviour(new HandleOffersBehaviour(myAgent, 2000, item));
+        agent.addBehaviour(new HandleOffersBehaviour(agent, 2000, item));
     }
     
 }

@@ -1,6 +1,9 @@
 
 package exercise5;
 
+import exercise5.behaviours.AskForItemBehaviour;
+import exercise5.behaviours.OfferItemBehaviour;
+import exercise5.behaviours.BuyOrNegotiateBehaviour;
 import exercise4.TaskAdministrator;
 import jade.core.AID;
 import jade.core.Agent;
@@ -13,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,8 +31,13 @@ public class TradingAgent extends Agent{
     List<IItem> purchased;
     int money = 1000;
     
+    List<IItem> itemsInTransaction;     //Items we are trying to trade
+    /**
+     * When we've given up on negotiating and price is as low as possible,
+     * we add the offers we've received to this list. Finally HandleOffersBehaviour
+     * picks the best offer we negotiated, and cancels the others.
+     */
     Map<IItem, Map<AID, Integer>> offers;
-    Map<IItem, Map<AID, Integer>> bids;
     
     @Override
     protected void setup() {
@@ -36,8 +45,8 @@ public class TradingAgent extends Agent{
         wishList = InventoryProvider.inventory(3, inventory);
         List<IItem> purchased = new ArrayList<IItem>();
         
-        offers = new HashMap<IItem, Map<AID,Integer>>();
-        bids = new HashMap<IItem, Map<AID,Integer>>();
+        offers = new HashMap<IItem, Map<AID, Integer>>();
+        itemsInTransaction = new ArrayList<IItem>();
         registerService(this);
         addBehaviour(new CyclicBehaviour(this) {
 
@@ -45,55 +54,63 @@ public class TradingAgent extends Agent{
             public void action() {
                 ACLMessage msg = receive();
                 if(msg != null){
+                    String[] msgArray = msg.getContent().split(";");
                     if(msg.getPerformative() == ACLMessage.QUERY_IF){
-                        for(IItem item: inventory){
-                            if(msg.getContent().equals(item.getName())){
-                                addBehaviour(new OfferItemBehaviour(myAgent, item, msg));
-                            }
+                        //Let an agent know that we have this item and we're willing to sell.
+                        //Lock the item down during negotiation.
+                        //After around two seconds we pick the best deal based on what we've
+                        //been able to negotiate.
+                        IItem item = stringToItem(msg.getContent(), inventory);
+                        if(item != null && !itemsInTransaction.contains(item)){
+                            itemsInTransaction.add(item);
+                            expectOffers(item);
+                            addBehaviour(new OfferItemBehaviour(myAgent, item, msg));
                         }
                     }else if(msg.getPerformative() == ACLMessage.INFORM){
-                        addOffer(msg);
+                        //An agent had the item we're looking for.
+                        //Start negotiating price of the item
+                        //Message format: "banana;10"
+                        IItem item = stringToItem(msg.getContent().split(";")[0], wishList);
+                        int price = Integer.parseInt(msg.getContent().split(";")[1]);
+                        if(item != null){
+                            addBehaviour(new BuyOrNegotiateBehaviour(myAgent, 
+                                    item, msg.getSender(), price));
+                        }
+                    }else if(msg.getPerformative() == ACLMessage.PROPOSE){
+                        //TODO we are proposed a new price on item we're selling
+                        // content: [itemname;lowerprice]
                     }else if(msg.getPerformative() == ACLMessage.AGREE){
-                        //TODO sell item, must somehow store price
+                        //TODO buyer accepts price
+                        // content: [itemname;price]
+                        ACLMessage accept = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
+                        accept.addReceiver(msg.getSender());
+                        accept.setContent(msg.getContent());
+                        sellItem(stringToItem(msgArray[0], inventory), Integer.parseInt(msgArray[1]));
+                        send(accept);
+                    }else if(msg.getPerformative() == ACLMessage.CANCEL){
+                        //TODO cancel transaction, buyer doesn't agree to trade.
+                        IItem item = stringToItem(msg.getContent().split(";")[0], null);
+                        if(item != null){
+                            itemsInTransaction.remove(item);
+                        }
+                    }else if(msg.getPerformative() == ACLMessage.ACCEPT_PROPOSAL){
+                        //TODO: Seller accepts proposal
+                        int price = Integer.parseInt(msgArray[1]);
+                        IItem item = stringToItem(msgArray[0], wishList);
+                        if (item != null){
+                            purchaseItem(item, price);
+                        }
+                    }else if(msg.getPerformative() == ACLMessage.REJECT_PROPOSAL){
+                        //TODO the price we suggested is rejected!
+                        //Negotiate further or just settle? Currently settles.
+                        // content: [itemname;price]
+                        addOffer(stringToItem(msgArray[0], wishList), 
+                                msg.getSender(), Integer.parseInt(msgArray[1]));
                     }
                 }
             }
         });
         addBehaviour(new AskForItemBehaviour(this, wishList.get(0)));
-    }
-    
-    /**
-     * We will expect to receive offers on an item. The purpose of this function
-     * is to allow for ignoring offers that are received after we've started
-     * handling offers in the wakerbehaviour.
-     * @param item 
-     */
-    public void expectOffers(IItem item){
-        offers.put(item, new HashMap<AID, Integer>());
-    }
-    
-    public void addOffer(ACLMessage msg){
-        String[] msgArray = msg.getContent().split(";");
-        IItem desiredItem = null;
-        for(IItem item:wishList){
-            if (msgArray[0].equals(item.getName())){
-                desiredItem = item;
-            }
-        }
-        if(offers.containsKey(desiredItem)){
-            offers.get(desiredItem).put(msg.getSender(), Integer.parseInt(msgArray[1]));
-        }
-        
-    }
-    
-    /**
-     * Get all the offers made for an item. This removes the key from the offers-
-     * map as well so that further messages with offers are ignored.
-     * @param item
-     * @return 
-     */
-    public Map<AID, Integer> pullOffers(IItem item){
-        return offers.remove(item);
     }
     
      public static void registerService(Agent myself) {
@@ -105,6 +122,18 @@ public class TradingAgent extends Agent{
         } catch (FIPAException ex) {
             ex.printStackTrace();
         }
+    }
+    
+    public IItem stringToItem(String itemName, List<IItem> list){
+        if(list == null){
+            list = new ArrayList<IItem>(inventory);
+            list.addAll(wishList);
+        }
+        for(IItem item: list){
+            if(itemName.equals(item.getName())){
+                return item;
+            }
+        }return null;
     }
     
     public static List<AID> getOtherAgents(Agent myself){
@@ -126,9 +155,38 @@ public class TradingAgent extends Agent{
         }
         return agents;
     }
-
-    boolean acceptPrice(IItem item, int lowestPrice) {
-        //TODO fix logic for either accepting or refusing an offer
-        return true;
+    
+    public void purchaseItem(IItem item, int price){
+        money -= price;
+        purchased.add(item);
+        wishList.remove(item);
+    }
+    
+    public void sellItem(IItem item, int price){
+        money += price;
+        inventory.remove(item);
+    }
+    
+    public void cancelOrder(IItem item){
+        itemsInTransaction.remove(item);
+    }
+    
+    public void expectOffers(IItem item){
+        offers.put(item, new HashMap<AID, Integer>());
+    }
+    
+    public void addOffer(IItem item, AID seller, int price){
+        if(offers.containsKey(item)){
+            offers.get(item).put(seller, price);
+        }
+    }
+    
+    public Map<AID, Integer> pullOffers(IItem item){
+        return offers.remove(item);
+    }
+    
+    public IItem getRandomDesiredItem(){
+        Random rand = new Random();
+        return wishList.get(rand.nextInt(wishList.size()));
     }
 }

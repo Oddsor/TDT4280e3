@@ -2,8 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package exercise5;
+package exercise5.behaviours;
 
+import exercise5.IItem;
+import exercise5.TradingAgent;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.OneShotBehaviour;
@@ -13,7 +15,7 @@ import jade.lang.acl.ACLMessage;
  *
  * @author Odd
  */
-class BuyItemBehaviour extends OneShotBehaviour {
+public class BuyItemBehaviour extends OneShotBehaviour {
 
     private TradingAgent agent;
     private IItem item;
