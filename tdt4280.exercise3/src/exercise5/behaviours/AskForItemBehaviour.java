@@ -33,6 +33,7 @@ public class AskForItemBehaviour extends OneShotBehaviour{
         TradingAgent agent = (TradingAgent) myAgent;
         agent.expectOffers(item);
         agent.addBehaviour(new HandleOffersBehaviour(agent, 2000, item));
+        agent.send(ask);
     }
     
 }

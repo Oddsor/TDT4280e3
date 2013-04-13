@@ -3,7 +3,7 @@ package exercise5;
 
 import exercise5.behaviours.AskForItemBehaviour;
 import exercise5.behaviours.OfferItemBehaviour;
-import exercise5.behaviours.BuyOrNegotiateBehaviour;
+import exercise5.behaviours.NegotiateBehaviour;
 import exercise4.TaskAdministrator;
 import jade.core.AID;
 import jade.core.Agent;
@@ -41,8 +41,9 @@ public class TradingAgent extends Agent{
     
     @Override
     protected void setup() {
-        inventory = InventoryProvider.inventory(4, null);
-        wishList = InventoryProvider.inventory(3, inventory);
+        inventory = InventoryProvider.inventory(5, null);
+        wishList = InventoryProvider.inventory(2, inventory);
+        purchased = new ArrayList<IItem>();
         List<IItem> purchased = new ArrayList<IItem>();
         
         offers = new HashMap<IItem, Map<AID, Integer>>();
@@ -73,7 +74,7 @@ public class TradingAgent extends Agent{
                         IItem item = stringToItem(msg.getContent().split(";")[0], wishList);
                         int price = Integer.parseInt(msg.getContent().split(";")[1]);
                         if(item != null){
-                            addBehaviour(new BuyOrNegotiateBehaviour(myAgent, 
+                            addBehaviour(new NegotiateBehaviour(myAgent, 
                                     item, msg.getSender(), price));
                         }
                     }else if(msg.getPerformative() == ACLMessage.PROPOSE){
@@ -89,6 +90,9 @@ public class TradingAgent extends Agent{
                         send(accept);
                     }else if(msg.getPerformative() == ACLMessage.CANCEL){
                         //TODO cancel transaction, buyer doesn't agree to trade.
+                        System.out.println("Trade for " + msg.getContent().split(";")[0] + 
+                                " between " + myAgent.getLocalName() + " and " + 
+                                msg.getSender().getLocalName() + " canceled.");
                         IItem item = stringToItem(msg.getContent().split(";")[0], null);
                         if(item != null){
                             itemsInTransaction.remove(item);
@@ -188,5 +192,9 @@ public class TradingAgent extends Agent{
     public IItem getRandomDesiredItem(){
         Random rand = new Random();
         return wishList.get(rand.nextInt(wishList.size()));
+    }
+    
+    public int getMoney(){
+        return money;
     }
 }
