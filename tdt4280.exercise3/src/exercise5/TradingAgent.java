@@ -5,6 +5,7 @@ import exercise5.behaviours.AskForItemBehaviour;
 import exercise5.behaviours.OfferItemBehaviour;
 import exercise5.behaviours.NegotiateBehaviour;
 import exercise4.TaskAdministrator;
+import exercise5.behaviours.ConsiderProposalBehaviour;
 import exercise5.behaviours.HandleOffersBehaviour;
 import jade.core.AID;
 import jade.core.Agent;
@@ -85,14 +86,32 @@ public class TradingAgent extends Agent{
                     }else if(msg.getPerformative() == ACLMessage.PROPOSE){
                         //TODO we are proposed a new price on item we're selling
                         // content: [itemname;lowerprice]
+                        IItem item = stringToItem(msgArray[0], inventory);
+                        if(item != null && itemsInTransaction.contains(item)){
+                            addBehaviour(new ConsiderProposalBehaviour(myAgent, 
+                                msg.getSender(), stringToItem(msgArray[0], null), 
+                                Integer.parseInt(msgArray[1])));
+                        }
                     }else if(msg.getPerformative() == ACLMessage.AGREE){
-                        //TODO buyer accepts price
+                        //TODO buyer/seller accepts price
+                        //run purchaseItem if item is in wishlist, run sellitem if item is in inventory
+                        //if item is wishlist send agree-message
                         // content: [itemname;price]
-                        ACLMessage accept = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
-                        accept.addReceiver(msg.getSender());
-                        accept.setContent(msg.getContent());
-                        sellItem(stringToItem(msgArray[0], inventory), Integer.parseInt(msgArray[1]));
-                        send(accept);
+                        IItem item = stringToItem(msgArray[0], inventory);
+                        if(item == null){
+                            item = stringToItem(msgArray[0], wishList);
+                            if(item != null){
+                                purchaseItem(item, Integer.parseInt(msgArray[1]));
+                                itemsInTransaction.remove(item);
+                            }
+                        }else{
+                            sellItem(item, Integer.parseInt(msgArray[1]));
+                            ACLMessage agree = new ACLMessage(ACLMessage.AGREE);
+                            agree.addReceiver(msg.getSender());
+                            agree.setContent(item.getName() + ";" + msgArray[1]);
+                            send(agree);
+                            itemsInTransaction.remove(item);
+                        }
                     }else if(msg.getPerformative() == ACLMessage.CANCEL){
                         //TODO cancel transaction, buyer doesn't agree to trade.
                         System.out.println("Trade for " + msg.getContent().split(";")[0] + 
@@ -104,11 +123,7 @@ public class TradingAgent extends Agent{
                         }
                     }else if(msg.getPerformative() == ACLMessage.ACCEPT_PROPOSAL){
                         //TODO: Seller accepts proposal
-                        int price = Integer.parseInt(msgArray[1]);
-                        IItem item = stringToItem(msgArray[0], wishList);
-                        if (item != null){
-                            purchaseItem(item, price);
-                        }
+                        addOffer(stringToItem(msgArray[0], wishList), msg.getSender(), Integer.parseInt(msgArray[1]));
                     }else if(msg.getPerformative() == ACLMessage.REJECT_PROPOSAL){
                         //TODO the price we suggested is rejected!
                         //Negotiate further or just settle? Currently settles.
@@ -174,12 +189,16 @@ public class TradingAgent extends Agent{
     }
     
     public void purchaseItem(IItem item, int price){
+        System.out.println(this.getLocalName() + " bought " + item.getName() + 
+                " for " + price);
         money -= price;
         purchased.add(item);
         wishList.remove(item);
     }
     
     public void sellItem(IItem item, int price){
+        System.out.println(this.getLocalName() + " sold " + item.getName() + 
+                " for " + price);
         money += price;
         inventory.remove(item);
     }

@@ -31,13 +31,14 @@ public class NegotiateBehaviour extends OneShotBehaviour{
     public void action() {
         Negotiate negotiate = null;
         //int priceSuggestion = negotiate.suggestPrice(item, price);
+        double random = Math.random();
         int priceSuggestion = -1;
-        if(priceSuggestion == -1){
+        if(random >= 0.5){
             ta.addOffer(item, tradePartner, price);
         }else{
             ACLMessage reply = new ACLMessage(ACLMessage.PROPOSE);
             reply.addReceiver(tradePartner);
-            reply.setContent(item.getName() + ";" + priceSuggestion);
+            reply.setContent(item.getName() + ";" + (price - 20));
         }
     }
     

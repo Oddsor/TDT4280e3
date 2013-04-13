@@ -33,7 +33,7 @@ public class HandleOffersBehaviour extends WakerBehaviour{
 
     @Override
     public void onWake() {
-        System.out.println(agent.getLocalName() + " is done waiting for offers, "
+        System.out.println("\n" + agent.getLocalName() + " is done waiting for offers, "
                 + "picking best offer for " + item.getName());
         Map<AID, Integer> offers = agent.pullOffers(item);
         if (offers.size() == 0){
@@ -59,7 +59,7 @@ public class HandleOffersBehaviour extends WakerBehaviour{
             }
             agent.send(cancelOrders);
 
-            System.out.println(bestSeller.getLocalName() + " had the best offer, and we accept it.");
+            System.out.println(bestSeller.getLocalName() + " had the best offer, and we accept it.\n");
             myAgent.addBehaviour(new BuyItemBehaviour(myAgent, bestSeller, item, lowestPrice));
         }
         try{
