@@ -5,6 +5,7 @@ import exercise5.behaviours.AskForItemBehaviour;
 import exercise5.behaviours.OfferItemBehaviour;
 import exercise5.behaviours.NegotiateBehaviour;
 import exercise4.TaskAdministrator;
+import exercise5.behaviours.HandleOffersBehaviour;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
@@ -30,6 +31,7 @@ public class TradingAgent extends Agent{
     List<IItem> inventory;
     List<IItem> purchased;
     int money = 1000;
+    public HandleOffersBehaviour waker;
     
     List<IItem> itemsInTransaction;     //Items we are trying to trade
     /**
@@ -55,7 +57,10 @@ public class TradingAgent extends Agent{
             public void action() {
                 ACLMessage msg = receive();
                 if(msg != null){
-                    String[] msgArray = msg.getContent().split(";");
+                    String[] msgArray = null;
+                    if(msg.getContent() != null){
+                        msgArray = msg.getContent().split(";");
+                    }
                     if(msg.getPerformative() == ACLMessage.QUERY_IF){
                         //Let an agent know that we have this item and we're willing to sell.
                         //Lock the item down during negotiation.
@@ -110,6 +115,12 @@ public class TradingAgent extends Agent{
                         // content: [itemname;price]
                         addOffer(stringToItem(msgArray[0], wishList), 
                                 msg.getSender(), Integer.parseInt(msgArray[1]));
+                    }else if(msg.getPerformative() == ACLMessage.CONFIRM){
+                        waker.stop();
+                        TradingAgent ta = (TradingAgent) myAgent;
+                        System.out.println("Game ended, " + ta.getLocalName() + 
+                                " has " + ta.getMoney() + " and is missing " + 
+                                wishList.size() + " items in wishlist.");
                     }
                 }
             }
@@ -155,7 +166,9 @@ public class TradingAgent extends Agent{
             ex.printStackTrace();
         }
         for (int i = 0; i < results.length; i++){
-            agents.add(results[i].getName());
+            if(!results[i].getName().equals(myself.getAID())){
+                agents.add(results[i].getName());
+            }
         }
         return agents;
     }

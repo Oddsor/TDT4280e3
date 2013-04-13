@@ -11,6 +11,7 @@ import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.WakerBehaviour;
 import jade.lang.acl.ACLMessage;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -27,11 +28,13 @@ public class HandleOffersBehaviour extends WakerBehaviour{
         super(a, timeout);
         this.agent = (TradingAgent) a;
         this.item = item;
+        this.agent.waker = this;
     }
 
     @Override
     public void onWake() {
-        System.out.println("Done waiting for offers, picking best offer for " + item.getName());
+        System.out.println(agent.getLocalName() + " is done waiting for offers, "
+                + "picking best offer for " + item.getName());
         Map<AID, Integer> offers = agent.pullOffers(item);
         if (offers.size() == 0){
             System.out.println("We've received " + offers.size() + " offers.");
@@ -62,7 +65,13 @@ public class HandleOffersBehaviour extends WakerBehaviour{
         try{
             agent.addBehaviour(new AskForItemBehaviour(agent, agent.getRandomDesiredItem()));
         }catch(Exception e){
+            ACLMessage stopGame = new ACLMessage(ACLMessage.CONFIRM);
+            List<AID> others = TradingAgent.getOtherAgents(agent);
+            for(AID other:others){
+                stopGame.addReceiver(other);
+            }
             System.out.println(agent.getLocalName() + " is done buying items! Money left: " + agent.getMoney());
+            agent.send(stopGame);
         }
     }
 }
