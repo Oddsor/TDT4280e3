@@ -38,10 +38,13 @@ public class NegotiateBehaviour extends OneShotBehaviour{
        
         if(priceSuggestion <0){
             ta.addOffer(item, tradePartner, price);
+            System.out.println(ta.getLocalName() + " accepts offer from " + tradePartner.getLocalName() + ". Item: " + item.getName() + ", price: " + price);
         }else{
             ACLMessage reply = new ACLMessage(ACLMessage.PROPOSE);
             reply.addReceiver(tradePartner);
-            reply.setContent(item.getName() + ";" + (priceSuggestion - 20));
+            reply.setContent(item.getName() + ";" + priceSuggestion);
+            System.out.println(ta.getLocalName() + " negotiates offer from " + tradePartner.getLocalName() + ". Item: " + item.getName() + ", new price: " + priceSuggestion);
+            ta.send(reply);
         }
     }
     

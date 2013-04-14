@@ -6,6 +6,8 @@ package exercise5.behaviours;
 
 import exercise5.IItem;
 import exercise5.TradingAgent;
+import exercise5.strategies.IStrategy;
+import exercise5.strategies.RandomStrategy;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.OneShotBehaviour;
@@ -32,11 +34,19 @@ public class ConsiderProposalBehaviour extends OneShotBehaviour{
     
     @Override
     public void action() {
-        double rand = Math.random();
-        if(rand <= 0.7){
-            ACLMessage accept = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
-            accept.addReceiver(buyer);
+        IStrategy strategy = (IStrategy) new RandomStrategy();
+        int counterBid = strategy.considerBuyersBid(item, price);
+        ACLMessage reply = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
+        reply.addReceiver(buyer);
+        if(counterBid < 0){
+            System.out.println(ta.getLocalName() + " accepts offer from " + buyer.getLocalName() + "; item: " + item.getName() + ", price: " + price);
+            reply.setContent(item.getName() + ";" + price);
+        }else{
+            reply.setPerformative(ACLMessage.REJECT_PROPOSAL);
+            reply.setContent(item.getName() + ";" + counterBid);
+            System.out.println(ta.getLocalName() + " rejects offer from " + buyer.getLocalName() + "; item: " + item.getName() + ", price: " + counterBid);
         }
+        ta.send(reply);
     }
     
 }
