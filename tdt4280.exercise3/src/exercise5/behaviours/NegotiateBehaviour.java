@@ -2,8 +2,9 @@
 package exercise5.behaviours;
 
 import exercise5.IItem;
-import exercise5.Negotiate;
 import exercise5.TradingAgent;
+import exercise5.strategies.IStrategy;
+import exercise5.strategies.RandomStrategy;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.OneShotBehaviour;
@@ -29,16 +30,17 @@ public class NegotiateBehaviour extends OneShotBehaviour{
     
     @Override
     public void action() {
-        Negotiate negotiate = null;
+        IStrategy strategy = (IStrategy) new RandomStrategy();
         //int priceSuggestion = negotiate.suggestPrice(item, price);
         double random = Math.random();
-        int priceSuggestion = -1;
-        if(random >= 0.5){
+        int priceSuggestion = strategy.suggestPrice(item, price);
+        
+        if(priceSuggestion <0){
             ta.addOffer(item, tradePartner, price);
         }else{
             ACLMessage reply = new ACLMessage(ACLMessage.PROPOSE);
             reply.addReceiver(tradePartner);
-            reply.setContent(item.getName() + ";" + (price - 20));
+            reply.setContent(item.getName() + ";" + (priceSuggestion - 20));
         }
     }
     

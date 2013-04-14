@@ -1,5 +1,7 @@
 
-package exercise5;
+package exercise5.strategies;
+
+import exercise5.IItem;
 
 /**
  *

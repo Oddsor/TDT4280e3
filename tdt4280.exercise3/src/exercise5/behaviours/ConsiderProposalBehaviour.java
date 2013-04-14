@@ -14,6 +14,7 @@ import jade.lang.acl.ACLMessage;
 /**
  *
  * @author Odd
+ * @author Andreas
  */
 public class ConsiderProposalBehaviour extends OneShotBehaviour{
 
@@ -35,7 +36,6 @@ public class ConsiderProposalBehaviour extends OneShotBehaviour{
         if(rand <= 0.7){
             ACLMessage accept = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
             accept.addReceiver(buyer);
-            
         }
     }
     
