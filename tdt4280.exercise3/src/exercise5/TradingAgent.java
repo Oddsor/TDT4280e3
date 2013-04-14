@@ -229,4 +229,12 @@ public class TradingAgent extends Agent{
     public int getMoney(){
         return money;
     }
+    
+    public boolean ownsItem(IItem item){
+    	for (IItem i : inventory) {
+			if(i.getName().equals(item.getName())) return true;
+		}
+    	return false;
+    }
+    
 }

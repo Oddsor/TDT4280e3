@@ -6,6 +6,7 @@ import exercise5.IItem;
 /**
  *
  * @author Odd
+ * @author Andreas
  */
 public interface IStrategy {
     
@@ -15,5 +16,6 @@ public interface IStrategy {
      * @param sellersPrice
      * @return -1 if price is deemed reasonable, otherwise suggest new price
      */
-    public int suggestPrice(IItem item, int sellersPrice);
+    public int considerSellersBid(IItem item, int sellersPrice);
+    public int considerBuyersBid(IItem item, int buyersBid);
 }
