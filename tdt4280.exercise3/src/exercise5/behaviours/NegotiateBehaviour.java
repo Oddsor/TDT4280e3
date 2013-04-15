@@ -36,7 +36,7 @@ public class NegotiateBehaviour extends OneShotBehaviour{
         IStrategy strategy = (IStrategy) new RandomStrategy();
         int priceSuggestion = strategy.considerSellersBid(item, price);
        
-        if(priceSuggestion <0){
+        if(priceSuggestion < 0){
             ta.addOffer(item, tradePartner, price);
             System.out.println(ta.getLocalName() + " accepts offer from " + tradePartner.getLocalName() + ". Item: " + item.getName() + ", price: " + price);
         }else{

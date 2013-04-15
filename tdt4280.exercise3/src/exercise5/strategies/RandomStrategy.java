@@ -6,17 +6,21 @@ public class RandomStrategy implements IStrategy{
 
 	@Override
 	public int considerSellersBid(IItem item, int sellersPrice) {
-		// TODO Auto-generated method stub
-		return Math.random() < 0.3 ? -1 : sellersPrice-20;
+            double cheap = 1.0 - (sellersPrice / (item.getPrice() * 2.0));
+            return Math.random() < cheap ? -1 : sellersPrice-20;
 	}
 
 	@Override
 	public int considerBuyersBid(IItem item, int buyersBid) {
-		// TODO Auto-generated method stub
-		return Math.random() < 0.7 ? -1 : buyersBid + 20;
+		if(buyersBid < item.getMinimum()){
+                    buyersBid = item.getMinimum();
+                }
+                double risk = (1.0 - (buyersBid / item.getPrice()) * 2);
+		return Math.random() > risk ? buyersBid : buyersBid + 20;
 	}
-
-	
-
-	
+        
+        public double getRisk(int sellersPrice, IItem item){
+            double risk = (item.getPrice() - sellersPrice) / item.getPrice();
+            return risk;
+        }
 }

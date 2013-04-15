@@ -62,16 +62,7 @@ public class HandleOffersBehaviour extends WakerBehaviour{
             System.out.println(bestSeller.getLocalName() + " had the best offer, and we accept it.\n");
             myAgent.addBehaviour(new BuyItemBehaviour(myAgent, bestSeller, item, lowestPrice));
         }
-        try{
-            agent.addBehaviour(new AskForItemBehaviour(agent, agent.getRandomDesiredItem()));
-        }catch(Exception e){
-            ACLMessage stopGame = new ACLMessage(ACLMessage.CONFIRM);
-            List<AID> others = TradingAgent.getOtherAgents(agent);
-            for(AID other:others){
-                stopGame.addReceiver(other);
-            }
-            System.out.println(agent.getLocalName() + " is done buying items! Money left: " + agent.getMoney());
-            agent.send(stopGame);
-        }
+        
+        agent.addBehaviour(new AskForItemBehaviour(agent, 100));
     }
 }

@@ -12,10 +12,18 @@ public interface IItem {
     public String getName();
     
     /**
-     * The cost of this object, selling at any lower will result in a loss
+     * The item's value
      * @return 
      */
-    public int productionCost();
-    
     public int getPrice();
+    
+    public void setPrice(int price);
+    
+    public void setLowestAccepted(int price);
+    
+    public int getLowestAccepted();
+    
+    public int getMinimum();
+    
+    public int getMaximum();
 }

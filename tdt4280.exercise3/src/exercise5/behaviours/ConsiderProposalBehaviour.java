@@ -38,13 +38,14 @@ public class ConsiderProposalBehaviour extends OneShotBehaviour{
         int counterBid = strategy.considerBuyersBid(item, price);
         ACLMessage reply = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
         reply.addReceiver(buyer);
-        if(counterBid < 0){
+        if(counterBid == price){
             System.out.println(ta.getLocalName() + " accepts offer from " + buyer.getLocalName() + "; item: " + item.getName() + ", price: " + price);
+            item.setLowestAccepted(price);
             reply.setContent(item.getName() + ";" + price);
         }else{
             reply.setPerformative(ACLMessage.REJECT_PROPOSAL);
             reply.setContent(item.getName() + ";" + counterBid);
-            System.out.println(ta.getLocalName() + " rejects offer from " + buyer.getLocalName() + "; item: " + item.getName() + ", price: " + counterBid);
+            System.out.println(ta.getLocalName() + " rejects offer from " + buyer.getLocalName() + "; item: " + item.getName() + ", price: " + item.getLowestAccepted());
         }
         ta.send(reply);
     }

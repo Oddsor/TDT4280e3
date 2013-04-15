@@ -23,11 +23,12 @@ public class OfferItemBehaviour extends OneShotBehaviour{
     
     @Override
     public void action() {
+        int offer = (int) (item.getPrice() + Math.random() * item.getPrice());
         System.out.println(myAgent.getLocalName() + " offers " + item.getName() 
-                + " to " + msg.getSender().getLocalName() + " for " + item.getPrice());
-        ACLMessage reply = new ACLMessage(ACLMessage.INFORM);
+                + " to " + msg.getSender().getLocalName() + " for " + offer);
+        ACLMessage reply = new ACLMessage(ACLMessage.CFP);
         reply.addReceiver(msg.getSender());
-        reply.setContent(item.getName() + ";" + item.getPrice());
+        reply.setContent(item.getName() + ";" + offer);
         myAgent.send(reply);
     }
     

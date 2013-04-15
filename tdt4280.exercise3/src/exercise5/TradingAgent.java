@@ -33,6 +33,8 @@ public class TradingAgent extends Agent{
     List<IItem> purchased;
     int money = 1000;
     public HandleOffersBehaviour waker;
+    private Map<IItem, Integer> timesAskedFor;
+    
     
     List<IItem> itemsInTransaction;     //Items we are trying to trade
     /**
@@ -47,8 +49,7 @@ public class TradingAgent extends Agent{
         inventory = InventoryProvider.inventory(5, null);
         wishList = InventoryProvider.inventory(2, inventory);
         purchased = new ArrayList<IItem>();
-        List<IItem> purchased = new ArrayList<IItem>();
-        
+        timesAskedFor = new HashMap<IItem, Integer>();
         offers = new HashMap<IItem, Map<AID, Integer>>();
         itemsInTransaction = new ArrayList<IItem>();
         registerService(this);
@@ -73,7 +74,7 @@ public class TradingAgent extends Agent{
                             expectOffers(item);
                             addBehaviour(new OfferItemBehaviour(myAgent, item, msg));
                         }
-                    }else if(msg.getPerformative() == ACLMessage.INFORM){
+                    }else if(msg.getPerformative() == ACLMessage.CFP){
                         //An agent had the item we're looking for.
                         //Start negotiating price of the item
                         //Message format: "banana;10"
@@ -123,13 +124,16 @@ public class TradingAgent extends Agent{
                         }
                     }else if(msg.getPerformative() == ACLMessage.ACCEPT_PROPOSAL){
                         //TODO: Seller accepts proposal
-                        addOffer(stringToItem(msgArray[0], wishList), msg.getSender(), Integer.parseInt(msgArray[1]));
+                        IItem item = stringToItem(msgArray[0], wishList);
+                        item.setLowestAccepted(Integer.parseInt(msgArray[1]));
+                        addBehaviour(new NegotiateBehaviour(myAgent, item, msg.getSender(), item.getLowestAccepted()));
                     }else if(msg.getPerformative() == ACLMessage.REJECT_PROPOSAL){
                         //TODO the price we suggested is rejected!
                         //Negotiate further or just settle? Currently settles.
                         // content: [itemname;price]
-                        addOffer(stringToItem(msgArray[0], wishList), 
-                                msg.getSender(), Integer.parseInt(msgArray[1]));
+                        IItem item = stringToItem(msgArray[0], wishList);
+                        item.setLowestAccepted(Integer.parseInt(msgArray[1]));
+                        addBehaviour(new NegotiateBehaviour(myAgent, item, msg.getSender(), item.getLowestAccepted()));
                     }else if(msg.getPerformative() == ACLMessage.CONFIRM){
                         waker.stop();
                         TradingAgent ta = (TradingAgent) myAgent;
@@ -140,7 +144,9 @@ public class TradingAgent extends Agent{
                 }
             }
         });
-        addBehaviour(new AskForItemBehaviour(this, wishList.get(0)));
+        
+        Random rand = new Random();
+        addBehaviour(new AskForItemBehaviour(this, 200 + (rand.nextInt(5)*100)));
     }
     
      public static void registerService(Agent myself) {
@@ -221,9 +227,24 @@ public class TradingAgent extends Agent{
         return offers.remove(item);
     }
     
-    public IItem getRandomDesiredItem(){
-        Random rand = new Random();
-        return wishList.get(rand.nextInt(wishList.size()));
+    public IItem getNextDesiredItem(){
+        IItem item = null;
+        int counter = 0;
+        for(int i = 0; i < wishList.size(); i++){
+            IItem newItem = wishList.get(i);
+            counter = 0;
+            if(timesAskedFor.containsKey(newItem)){
+                counter = timesAskedFor.get(newItem);
+            }
+            if(counter < 3){
+                item = newItem;
+                break;
+            }else System.out.println("Looked for an item three times.");
+        }
+        if(item != null){
+            timesAskedFor.put(item, counter + 1);
+        }
+        return item;
     }
     
     public int getMoney(){
