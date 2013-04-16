@@ -21,6 +21,8 @@ public class InventoryProvider {
         itemBase.add(new Item("Iron Man dvd", 100));
         itemBase.add(new Item("Avatar 3d bluray", 150));
         itemBase.add(new Item("Russian caviar", 200));
+        itemBase.add(new Item("Coca Cola tray", 250));
+        itemBase.add(new Item("Playstation 3", 450));
         return itemBase;
     }
     

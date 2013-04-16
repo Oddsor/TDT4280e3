@@ -46,7 +46,7 @@ public class TradingAgent extends Agent{
     
     @Override
     protected void setup() {
-        inventory = InventoryProvider.inventory(5, null);
+        inventory = InventoryProvider.inventory(7, null);
         wishList = InventoryProvider.inventory(2, inventory);
         purchased = new ArrayList<IItem>();
         timesAskedFor = new HashMap<IItem, Integer>();
