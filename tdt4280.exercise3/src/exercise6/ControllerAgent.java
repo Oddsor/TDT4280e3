@@ -117,6 +117,7 @@ class SuperBehaviour extends CyclicBehaviour {
     private ControllerAgent myAgent;
     private boolean turnRight = false;
     private int counter;
+    private int recentlyNearNode = 0;
 
     public SuperBehaviour(Agent a) {
         this.myAgent = (ControllerAgent) a;
@@ -180,7 +181,6 @@ class SuperBehaviour extends CyclicBehaviour {
 
             //System.out.println((double) (left[5] + right[5]) / (double) (camera_height*camera_width));
             if ((double) (left[5] + right[5]) / (double) (camera_height * camera_width) > 0.3) {
-                System.out.println("Friendly in front!");
                 if (counter < 0) {
                     counter = 10;
                     turnRight = !turnRight;
@@ -210,8 +210,11 @@ class SuperBehaviour extends CyclicBehaviour {
                     }
                 }
             }
+            if((double) (left[1] + right[3]) / (double) (camera_height * camera_width) > 0.2){
+                recentlyNearNode = 2;
+            }
 
-            if (gold_delta != 0.0 && distance_delta == 0.0 && !closerFriend) {
+            if (gold_delta != 0.0 && distance_delta == 0.0 && !closerFriend && recentlyNearNode <= 0) {
                 double[] motor_speeds = {0.0, 0.0};
                 motor_speeds[0] = ControllerAgent.boundSpeed(100.0 - gold_delta);
                 motor_speeds[1] = ControllerAgent.boundSpeed(100.0 + gold_delta);
@@ -220,6 +223,15 @@ class SuperBehaviour extends CyclicBehaviour {
                 reply.setContent(motor_speeds[0] + ", " + motor_speeds[1]);
                 myAgent.send(reply);
                 counter--;
+                recentlyNearNode--;
+                return;
+            }
+            if(recentlyNearNode > 0){
+                ACLMessage reply = msg.createReply();
+                reply.setContent("50.0, 50.0");
+                myAgent.send(reply);
+                counter--;
+                recentlyNearNode--;
                 return;
             }
 
@@ -237,6 +249,7 @@ class SuperBehaviour extends CyclicBehaviour {
             reply.setContent(motor_speeds[0] + ", " + motor_speeds[1]);
             myAgent.send(reply);
             counter--;
+            recentlyNearNode--;
             return;
         } else {
             block();
