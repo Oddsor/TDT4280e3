@@ -187,7 +187,7 @@ class SuperBehaviour extends CyclicBehaviour {
                 }
             }
             boolean closerFriend = false;
-            if ((double) (left[1] + right[3]) / (double) (camera_height * camera_width) < 0.01){
+            if ((double) (left[1] + right[3]) / (double) (camera_height * camera_width) < 0.005){
                 for(double[] agentVals : myAgent.agentInfo.values()){
                     if(bearing < 180.0){
                         //West
